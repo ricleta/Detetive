@@ -5,7 +5,8 @@ class Jogador
   private int x;
   private int y;
   private String player;
-
+  private String cartas[];
+  
   Jogador(int x, int y, String player) 
   {
     this.x = x;
@@ -37,4 +38,11 @@ class Jogador
   {
     this.y = y;
   }
+
+  void set_cartas(int n_jogadores, String cartas[])
+  {
+    // calcular max de cartas de acordo com n de jogadores
+    // TODO
+  }
+
 }
