@@ -1,17 +1,22 @@
 package regras;
 
+import java.util.*;
+
 class Jogador
 {
   private int x;
   private int y;
-  private String player;
-  private String cartas[];
+  private String suspeito;
+  private ArrayList <String> cartas = new ArrayList<String>();  
+  private boolean eliminado;
   
-  Jogador(int x, int y, String player) 
+  // Selecao de nome feita de uma lista na gui, não pode ser inválida
+  Jogador(int x, int y, String suspeito) 
   {
     this.x = x;
     this.y = y;
-    this.player = player;
+    this.suspeito = suspeito;
+    this.eliminado = false;
   }
 
   int getX()
@@ -24,11 +29,21 @@ class Jogador
     return y;
   }
 
-  String getPersonagem()
+  String getsuspeito()
   {
-    return player;
+    return suspeito;
   }
 
+  boolean getEliminado()
+  {
+    return eliminado;
+  }
+
+  void setEliminado()
+  {
+    eliminado = true;
+  }
+  
   void setX(int x)
   {
     this.x = x;
@@ -39,10 +54,23 @@ class Jogador
     this.y = y;
   }
 
-  void set_cartas(int n_jogadores, String cartas[])
+  void add_carta(String carta)
   {
-    // calcular max de cartas de acordo com n de jogadores
-    // TODO
+    cartas.add(carta);
   }
 
+  String[] get_cartas()
+  {
+    return cartas;
+  }
+
+  // void movimentar(){
+    // int dado;
+
+    // dado = roll_die();
+
+    // System.out.println("Resultado do dado: "+dado); ////// passar isso p interface gráfica 
+
+    //TODO 
+  // }
 }
