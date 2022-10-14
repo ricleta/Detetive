@@ -4,11 +4,12 @@ import java.util.*;
 
 class Regras
 {
+  /* atributos */
   private String suspeitos[] = {"Srta. Scarlet", "Coronel Mustard", "Professor Plum", "Reverendo Green", "Sra. White", "Sra. Peacock"};
 
-  private String armas[] = {"Corda", "Cano de Chumbo", "Faca", "Chave Inglesa", "Castiçal", "Revólver"}; 
+  private String armas[] = {"Corda", "Cano de Chumbo", "Faca", "Chave Inglesa", "Castical", "Revolver"}; 
 
-  private String comodos[] = {"Banheiro", "Escritório", "Sala de Estar", "Sala de jogos", "Garagem", "Quarto", "Sala de Estar", "Cozinha", "Pátio"};
+  private String comodos[] = {"Banheiro", "Escritorio", "Sala de Estar", "Sala de jogos", "Garagem", "Quarto", "Sala de Estudos", "Cozinha", "Patio"};
 
   // 0 -> suspeito, 1 -> arma, 2-> comodo
   private String envelope[] = new String[3];
@@ -16,14 +17,32 @@ class Regras
   // array de cartas que não estão no envelope
   // tam = 5 + 5 + 8 = 18, nao considera envelope
   private ArrayList <String> cartas = new ArrayList<String>();  
-  Jogador jogadores[]; 
+  ArrayList <Jogador> jogadores; 
 
+  /* construtor e métodos */
+  
   public Regras(int num_jogadores)
   {
-    jogadores = new Jogador[num_jogadores];
+    jogadores = new ArrayList <Jogador>();
 
     // Srta scarlet e sempre a primeira a jogar, então deve sempre existir numa partida
-    jogadores[0] = new Jogador(0, 0, suspeitos[0]);
+    jogadores.add(new Jogador(0, 0, suspeitos[0]));
+  }
+
+  public void add_jogador(String personagem)
+  {
+    jogadores.add(new Jogador(0, 0, personagem));
+  }
+
+  // retorna nome do personagem do jogador que deveria jogar nesse turno
+  // o tipo de retorno talvez tenha que mudar quando formos implementar a gui
+  public String get_jogador_atual(int turno_atual)
+  {
+    Jogador j_atual = jogadores.get(turno_atual % jogadores.size());
+
+    // se jogador pode jogar, retorna nome
+    // se foi eliminado por uma acusao errada, retorna aviso
+    return (!j_atual.getEliminado()) ? j_atual.getPersonagem() : "Jogador Eliminado"; 
   }
   
   int roll_die()
@@ -48,6 +67,7 @@ class Regras
 	  return envelope;
   }
 
+  /* método para embarlhar as cartas sem incluir as cartas do envelope */
   void embaralhador()
   {
     int i = 0;
@@ -58,10 +78,7 @@ class Regras
       {
         cartas.add(suspeitos[i]);
       }
-    }
-    
-    for(i = 0; i < 6; i++)
-    {
+      
       if(!(armas[i].equals(envelope[1])))
       {    
         cartas.add(armas[i]);
@@ -75,7 +92,7 @@ class Regras
         cartas.add(comodos[i]);
       }
     }
-
+    
     Collections.shuffle(cartas);
   }
   
@@ -84,14 +101,15 @@ class Regras
   {
 	  return cartas;
   }
-  
+
+  /* método para distribuir as 18 cartas entre N jogadores */
   void distribui()
   {
-	this.set_envelope();
-	this.embaralhador();
+	  this.set_envelope();
+	  this.embaralhador();
 	
-    int sobra = cartas.size() % jogadores.length;
-    int quociente = (cartas.size() - sobra) / jogadores.length;
+    int sobra = cartas.size() % jogadores.size();
+    int quociente = (cartas.size() - sobra) / jogadores.size();
  
     if (sobra == 0)
     {
@@ -140,16 +158,61 @@ class Regras
     return false;
   }
 
-  void faz_acusacao(Jogador j, String suspeito, String arma, String comodo)
+  boolean faz_acusacao(Jogador j, String suspeito, String arma, String comodo)
   {    
     if (verifica_acusacao(suspeito, arma, comodo))
     {
-      // encerrar jogo
+      // main deve encerrar jogo atual
+      return true;
     }
     else
     {
       j.setEliminado();
+      return false;
     }
   }
+
+  String verifica_palpite(Jogador prox_jog, String suspeito, String arma, String comodo)
+  {
+    for(String carta : prox_jog.get_cartas())
+    {
+      if(carta.equals(suspeito))
+      {
+        return suspeito;
+      }
+      
+      if (carta.equals(arma))
+      {
+        return arma;
+      }
+      
+      if (carta.equals(comodo))
+      {
+        return comodo;
+      }
+    }
+
+    return null; 
+  }
+
+  String faz_palpite(Jogador j, String suspeito, String arma, String comodo)
+  {
+    String resultado = null;
+
+    for(Jogador jog: jogadores) 
+    {
+      if(!jog.equals(j))
+      {
+        resultado = verifica_palpite(jog, suspeito, arma, comodo);
+      }
+    }
+
+    if(resultado == null)
+    {
+      // return value temporario, depende da interface
+      return "Palpite nao foi refutado";
+    }
     
+    return resultado;
+  }
 }
