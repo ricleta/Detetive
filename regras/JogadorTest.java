@@ -2,6 +2,8 @@ package regras;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Test;
 
 class JogadorTest {
@@ -32,7 +34,22 @@ class JogadorTest {
 		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
 		assertEquals("Coronel Mustard", a.getPersonagem());
 	}
+	
+	@Test
+	void testGetEliminado() {
+		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		assertEquals(false, a.getEliminado());
+	}
 
+	@Test
+	void testSetEliminado() {
+		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		
+		a.setEliminado();
+		
+		assertEquals(true, a.getEliminado());
+	}
+	
 	@Test
 	void testSetX() {
 		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
@@ -49,5 +66,18 @@ class JogadorTest {
 		a.setY(0);
 		
 		assertEquals(0, a.getY());		
+	}
+	
+	@Test
+	void testAddCarta() {
+		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		
+		a.add_carta("Faca");
+		
+		ArrayList <String> lista = new ArrayList<String>();
+		
+		lista.add("Faca");
+		
+		assertEquals(lista, a.get_cartas());
 	}
 }

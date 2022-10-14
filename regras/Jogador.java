@@ -6,16 +6,16 @@ class Jogador
 {
   private int x;
   private int y;
-  private String suspeito;
+  private String personagem;
   private ArrayList <String> cartas = new ArrayList<String>();  
   private boolean eliminado;
   
   // Selecao de nome feita de uma lista na gui, não pode ser inválida
-  Jogador(int x, int y, String suspeito) 
+  Jogador(int x, int y, String personagem) 
   {
     this.x = x;
     this.y = y;
-    this.suspeito = suspeito;
+    this.personagem = personagem;
     this.eliminado = false;
   }
 
@@ -29,9 +29,9 @@ class Jogador
     return y;
   }
 
-  String getsuspeito()
+  String getPersonagem()
   {
-    return suspeito;
+    return personagem;
   }
 
   boolean getEliminado()
@@ -59,18 +59,8 @@ class Jogador
     cartas.add(carta);
   }
 
-  String[] get_cartas()
+  ArrayList <String> get_cartas()
   {
     return cartas;
   }
-
-  // void movimentar(){
-    // int dado;
-
-    // dado = roll_die();
-
-    // System.out.println("Resultado do dado: "+dado); ////// passar isso p interface gráfica 
-
-    //TODO 
-  // }
 }

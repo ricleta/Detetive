@@ -4,11 +4,11 @@ import java.util.*;
 
 class Regras
 {
-  private String suspeito[] = {"Srta. Scarlet", "Coronel Mustard", "Professor Plum", "Reverendo Green", "Sra. White", "Sra. Peacock"};
+  private String suspeitos[] = {"Srta. Scarlet", "Coronel Mustard", "Professor Plum", "Reverendo Green", "Sra. White", "Sra. Peacock"};
 
   private String armas[] = {"Corda", "Cano de Chumbo", "Faca", "Chave Inglesa", "Castiçal", "Revólver"}; 
 
-  private String comodo[] = {"Banheiro", "Escritório", "Sala de Estar", "Sala de jogos", "Garagem", "Quarto", "Sala de Estar", "Cozinha", "Pátio"};
+  private String comodos[] = {"Banheiro", "Escritório", "Sala de Estar", "Sala de jogos", "Garagem", "Quarto", "Sala de Estar", "Cozinha", "Pátio"};
 
   // 0 -> suspeito, 1 -> arma, 2-> comodo
   private String envelope[] = new String[3];
@@ -23,7 +23,7 @@ class Regras
     jogadores = new Jogador[num_jogadores];
 
     // Srta scarlet e sempre a primeira a jogar, então deve sempre existir numa partida
-    jogadores[0] = new Jogador(0, 0, suspeito[1]);
+    jogadores[0] = new Jogador(0, 0, suspeitos[0]);
   }
   
   int roll_die()
@@ -37,21 +37,26 @@ class Regras
   {
     Random r = new Random();
     
-    envelope[0] = suspeito[r.nextInt(0, 6)];
+    envelope[0] = suspeitos[r.nextInt(0, 6)];
     envelope[1] = armas[r.nextInt(0, 6)]; 
-    envelope[2] = comodo[r.nextInt(0, 9)];
+    envelope[2] = comodos[r.nextInt(0, 9)];
+  }
+  
+  // usado para testar set_envelope, por envelope ser private
+  String [] get_envelope()
+  {
+	  return envelope;
   }
 
   void embaralhador()
   {
-    Random r = new Random();
     int i = 0;
     
     for(i = 0; i < 6; i++)
     {
-      if(!(suspeito[i].equals(envelope[0])))
+      if(!(suspeitos[i].equals(envelope[0])))
       {
-        cartas.add(suspeito[i]);
+        cartas.add(suspeitos[i]);
       }
     }
     
@@ -65,18 +70,26 @@ class Regras
     
     for(i = 0; i < 9; i++)
     {
-      if(!(comodo[i].equals(envelope[2])))
+      if(!(comodos[i].equals(envelope[2])))
       {    
-        cartas.add(comodo[i]);
+        cartas.add(comodos[i]);
       }
     }
 
     Collections.shuffle(cartas);
-    //// P embaralhar lista é Collections.shuffle(cartas)
+  }
+  
+//usado para testar embaralhador, por cartas ser private 
+  ArrayList <String> get_cartas()
+  {
+	  return cartas;
   }
   
   void distribui()
   {
+	this.set_envelope();
+	this.embaralhador();
+	
     int sobra = cartas.size() % jogadores.length;
     int quociente = (cartas.size() - sobra) / jogadores.length;
  
