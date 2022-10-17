@@ -2,7 +2,7 @@ package regras;
 
 import java.util.*;
 
-public class Regras 
+class Regras 
 {
       /**** atributos ****/
 	  private String suspeitos[] = {"Srta. Scarlet", "Coronel Mustard", "Professor Plum", "Reverendo Green", "Sra. White", "Sra. Peacock"};
@@ -20,7 +20,7 @@ public class Regras
 	  ArrayList <Jogador> jogadores; 
 
 	  /**** construtor e métodos ****/
-	  public Regras(int num_jogadores)
+	  Regras(int num_jogadores)
 	  {
 	    jogadores = new ArrayList <Jogador>();
 
@@ -28,29 +28,14 @@ public class Regras
 	    jogadores.add(new Jogador(0, 0, suspeitos[0]));
 	  }
 
-	  public void add_jogador(String personagem)
+	  ArrayList <Jogador> getJogadores()
+	  {
+		  return jogadores;
+	  }
+	  
+	  void add_jogador(String personagem)
 	  {
 	    jogadores.add(new Jogador(0, 0, personagem));
-	  }
-
-	  // retorna nome do personagem do jogador que deveria jogar nesse turno
-	  // o tipo de retorno talvez tenha que mudar quando formos implementar a gui
-	  /* retorna o jogador da vez (ou o aviso de que o jogador foi eliminado) */
-	  public String get_jogador_atual(int turno_atual)
-	  {
-	    Jogador j_atual = jogadores.get(turno_atual % jogadores.size());
-
-	    // se jogador pode jogar, retorna nome
-	    // se foi eliminado por uma acusao errada, retorna aviso
-	    return (!j_atual.getEliminado()) ? j_atual.getPersonagem() : "Jogador Eliminado"; 
-	  }
-
-	  /* seleciona um número randômico de 1 a 6 para indicar o valor do dado */
-	  int roll_die()
-	  {
-	    Random random = new Random();
-	    
-	    return random.nextInt(1,7);
 	  }
 
 	  /* 3 cartas, 1 de cada tipo selecionadas randomicamente para o envelope */
@@ -174,42 +159,6 @@ public class Regras
 	    }
 	    
 	    return false;
-	  }
-	  
-	  /* Jogador j faz um palpite sobre os dados do assassinato e é verificado na mão dos demais jogadores se possuem alguma das cartas do palpite */
-	  String faz_palpite(Jogador j, String suspeito, String arma, String comodo)
-	  {
-	    String resultado = null;
-	    Jogador jog; // jogador que vai ser acusado do palpite
-	    int i, k;
-
-	    k = jogadores.indexOf(j);
-	    
-	    for(i = k; i < jogadores.size(); i++)
-	    {
-	      jog = jogadores.get(i);
-	      resultado = verifica_palpite(jog, suspeito, arma, comodo);
-	      
-	      if (resultado != null)
-	      {
-	    	  return resultado;
-	      }
-	    }
-
-	    for(i = 0; i < k; i++)
-	    {
-	      jog = jogadores.get(i);
-	      resultado = verifica_palpite(jog, suspeito, arma, comodo);
-	      
-	      if (resultado != null)
-	      {
-	    	  return resultado;
-	      }
-	    }
-
-	   
-	    // return value temporario, depende da interface
-	    return "Palpite nao foi refutado";
 	  }
 	  
 	  /* verifica se alguma das cartas do palpite está na mão do jogador. Se estiver, o palpite está errado */
