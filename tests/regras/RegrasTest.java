@@ -1,13 +1,12 @@
 package regras;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.junit.Test;
 
-import org.junit.jupiter.api.Test;
-
-class RegrasTest {
+public class RegrasTest {
 	
 	private String suspeitos[] = {"Srta. Scarlet", "Coronel Mustard", "Professor Plum", "Reverendo Green", "Sra. White", "Sra. Peacock"};
 
@@ -15,12 +14,13 @@ class RegrasTest {
 
 	private String comodos[] = {"Banheiro", "Escritorio", "Sala de Estar", "Sala de jogos", "Garagem", "Quarto", "Sala de Estudos", "Cozinha", "Patio"};
 
-	ArrayList<String> l_suspeitos = new ArrayList<String>(Arrays.asList(suspeitos));
-	ArrayList<String> l_armas = new ArrayList<String>(Arrays.asList(armas));
-	ArrayList<String> l_comodos = new ArrayList<String>(Arrays.asList(comodos));
+	private ArrayList<String> l_suspeitos = new ArrayList<String>(Arrays.asList(suspeitos));
+	private ArrayList<String> l_armas = new ArrayList<String>(Arrays.asList(armas));
+	private ArrayList<String> l_comodos = new ArrayList<String>(Arrays.asList(comodos));
 	
+	// tambem testa a funcao add_jogador
 	@Test
-	void testRegras() {
+	public void testRegras() {
 		Regras r = new Regras(3);
 		
 		for (int i = 1; i < 3; i++)
@@ -29,10 +29,39 @@ class RegrasTest {
 		}
 		
 		assertEquals(3, r.jogadores.size());
+		
+		for (Jogador j: r.jogadores)
+		{
+			assertTrue(l_suspeitos.contains(j.getPersonagem()));
+		}
 	}
-
+	
 	@Test
-	void testRoll_die() {
+	public void testGet_jogador_atual() 
+	{
+		Regras r[] = new Regras[4];
+		
+		for (int i = 0; i < r.length; i++)
+		{
+			int n_jog = 3 + i;
+			r[i] = new Regras(n_jog);
+			
+			for (int j = 1; j < n_jog; j++)
+			{
+				r[i].add_jogador(suspeitos[i]);
+			}
+			
+			for(int cont = 0; cont < n_jog; cont++)
+			{
+				assertTrue(r[i].get_jogador_atual(cont).equals(r[i].jogadores.get(cont % 18).getPersonagem()));
+				assertFalse(r[i].get_jogador_atual(cont).equals("Jessica"));
+			}
+		}
+	}
+	
+	@Test
+	public void testRoll_die() 
+	{
 		Regras r = new Regras(3);
 		
 		int dado = r.roll_die();
@@ -41,7 +70,7 @@ class RegrasTest {
 	}
 
 	@Test
-	void testSet_envelope() {
+	public void testSet_envelope() {
 		Regras r = new Regras(3);
 			
 		r.set_envelope();
@@ -52,7 +81,7 @@ class RegrasTest {
 	}
 
 	@Test
-	void testEmbaralhador() {
+	public void testEmbaralhador() {
 		Regras r = new Regras(3);
 		
 		r.set_envelope();
@@ -60,14 +89,14 @@ class RegrasTest {
 		
 		ArrayList<String> cartas = r.get_cartas();
 		
-		assertTrue(!cartas.contains(r.get_envelope()[0]));
-		assertTrue(!cartas.contains(r.get_envelope()[1]));
-		assertTrue(!cartas.contains(r.get_envelope()[2]));
+		assertFalse(cartas.contains(r.get_envelope()[0]));
+		assertFalse(cartas.contains(r.get_envelope()[1]));
+		assertFalse(cartas.contains(r.get_envelope()[2]));
 		assertEquals(cartas.size(), 18);
 	}
 
 	@Test
-	void testDistribui() {
+	public void testDistribui() {
 		Regras r[] = new Regras[4];
 		
 		for (int i = 0; i < r.length; i++)
@@ -122,10 +151,76 @@ class RegrasTest {
 		
 	}
 
+	// testa verifica_acusao tabmbem
 	@Test
-	void testVerifica_acusacao() 
+	public void testFaz_acusacao() 
 	{
-		fail("Not yet implemented");
+		Regras r = new Regras(4);
+		
+		for (int i = 1; i < 4; i++)
+		{
+			r.add_jogador(suspeitos[i]);
+		}
+		
+		r.distribui();
+		
+		String env_aux[] = r.get_envelope();
+		String aux = "Suspeito que nao existe";
+		
+		// testa acusao certa
+		assertTrue(r.faz_acusacao(r.jogadores.get(0), env_aux[0], env_aux[1], env_aux[2]));
+		
+		// testa acusacao errada, com o suspeito errado
+		assertFalse(r.faz_acusacao(r.jogadores.get(1), aux, env_aux[1], env_aux[2]));
+		
+		// testa acusacao errada, com a arma errada
+		assertFalse(r.faz_acusacao(r.jogadores.get(2), env_aux[0], aux, env_aux[2]));
+		
+		// testa acusacao errada, com o comodo errado
+		assertFalse(r.faz_acusacao(r.jogadores.get(3), env_aux[0], env_aux[1], aux));
+		
+		// verifica se jogadores que fizeram acusacao errada, forma eliminados
+		assertTrue(r.jogadores.get(1).getEliminado() && r.jogadores.get(2).getEliminado() && r.jogadores.get(3).getEliminado());
 	}
-
+	
+	@Test
+	public void testFaz_palpite() 
+	{
+		AuxRegras r = new AuxRegras(4);
+		
+		for (int i = 1; i < 4; i++)
+		{
+			r.add_jogador(suspeitos[i]);
+		}
+		
+		r.distribui("Coronel Mustard", "Corda", "Sala de Estar");
+		
+		String env_aux[] = {"Coronel Mustard", "Corda", "Sala de Estar"};
+	
+		String []res = new String[4];
+		
+		// palpite certeiro, todos estao no envelope
+		res[0] = r.faz_palpite(r.jogadores.get(0), env_aux[0], env_aux[1], env_aux[2]);
+		
+		// palpite incorreto de suspeito
+		res[1] = r.faz_palpite(r.jogadores.get(1), "Professor Plum", env_aux[1], env_aux[2]);
+		
+		// palpite incorreto de arma
+		res[2] = r.faz_palpite(r.jogadores.get(2), env_aux[0], "Faca", env_aux[2]);
+		
+		// palpite incorreto de comodo
+		res[3] = r.faz_palpite(r.jogadores.get(3), env_aux[0], env_aux[1], "Garagem");
+		
+		// testa acusacao certa
+		assertEquals(res[0], "Palpite nao foi refutado");
+		
+		// testa acusacao errada, com o suspeito errado
+		assertEquals(res[1], "Professor Plum");
+		
+		// testa acusacao errada, com a arma errada
+		assertEquals(res[2], "Faca");
+		
+		// testa acusacao errada, com o comodo errado
+		assertEquals(res[3], "Garagem");
+	}
 }
