@@ -1,6 +1,5 @@
-import src.*;
-import src.gui.*;
-import src.regras.*;
+import gui.*;
+import regras.*;
 
 public class Main 
 {

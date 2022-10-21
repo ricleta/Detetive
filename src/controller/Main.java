@@ -6,8 +6,9 @@ public class Main {
 
 	public static void main(String[] args) 
 	{
-		TelaInicial ti = new TelaInicial();
-	    CheckBox cb = new CheckBox();
+//		TelaInicial ti = new TelaInicial();
+		
+		TelaJogo tj = new TelaJogo();
 	}
 
 }
