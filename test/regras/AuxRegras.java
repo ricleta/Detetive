@@ -1,6 +1,6 @@
 package regras;
 
-class AuxRegras extends Regras{
+public class AuxRegras extends Regras{
 
 	public AuxRegras(int num_jogadores) {
 		super(num_jogadores);
@@ -14,7 +14,7 @@ class AuxRegras extends Regras{
 	}
 	
 	/* método para distribuir as 18 cartas entre N jogadores */
-	  void distribui(String suspeito, String arma, String comodo)
+	  public void distribui(String suspeito, String arma, String comodo)
 	  {
 		this.hard_code_envelope(suspeito, arma, comodo);
 		this.embaralhador();

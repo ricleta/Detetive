@@ -1,17 +1,28 @@
-package regras;
+/////////////////////REFAZER
 
-import java.util.ArrayList;
+package controller;
+
+import java.util.Arrays;
 import java.util.Random;
+import regras.*;
 
 public class Controller
 {
 	Regras r;
-	ArrayList <Jogador> jogadores;
+	String [] j_personagens; // array para conter nome dos personagens de cada jogador
+	boolean [] j_estados; // array para conter a boolean que indica se um jogador foi eliminado ou nao
+	int n_jogadores = 0;
 	
 	public Controller(int n_jogadores)
 	{
 		r = new Regras(n_jogadores);
-		jogadores = r.getJogadores();
+		this.n_jogadores = n_jogadores;
+		
+		j_personagens = new String[n_jogadores];
+		j_estados = new boolean[n_jogadores];
+		
+		j_personagens = r.getNomeJogadores();
+		j_estados = r.getStatusJogadores();
 	}
 	
 	
@@ -20,11 +31,11 @@ public class Controller
 	/* retorna o jogador da vez (ou o aviso de que o jogador foi eliminado) */
 	public String get_jogador_atual(int turno_atual)
 	{
-		Jogador j_atual = jogadores.get(turno_atual % jogadores.size());
+		int id_j_atual = turno_atual % n_jogadores;
 
 		// se jogador pode jogar, retorna nome
 		// se foi eliminado por uma acusao errada, retorna aviso
-		return (!j_atual.getEliminado()) ? j_atual.getPersonagem() : "Jogador Eliminado"; 
+		return (!j_estados[id_j_atual]) ? j_personagens[id_j_atual] : "Jogador Eliminado"; 
 	}
 
 	/* seleciona um número randômico de 1 a 6 para indicar o valor do dado */
@@ -36,7 +47,7 @@ public class Controller
 	}
 	
 	/* Jogador j faz uma acusação sobre os dados do assassinato. Se a acusação estiver correta, j vence o jogo, caso contrário é eliminado */
-	boolean faz_acusacao(Jogador j, String suspeito, String arma, String comodo)
+	boolean faz_acusacao(String j_personagem, String suspeito, String arma, String comodo)
 	{    
 		if (r.verifica_acusacao(suspeito, arma, comodo))
 	    {
@@ -45,24 +56,24 @@ public class Controller
 	    }
 	    else
 	    {
-	      j.setEliminado();
+	      r.set_jogador_eliminado(j_personagem);
 	      return false;
 	    }
 	  }
 	
 	/* Jogador j faz um palpite sobre os dados do assassinato e é verificado na mão dos demais jogadores se possuem alguma das cartas do palpite */
-	String faz_palpite(Jogador j, String suspeito, String arma, String comodo)
+	String faz_palpite(String j_personagem, String suspeito, String arma, String comodo)
 	  {
 	    String resultado = null;
-	    Jogador jog; // jogador que vai ser acusado do palpite
+	    String j_investigado; // jogador cujas cartas serao analisadas
 	    int i, k;
 
-	    k = jogadores.indexOf(j);
+	    k = Arrays.binarySearch(j_personagens, j_personagem);
 	    
-	    for(i = k; i < jogadores.size(); i++)
+	    for(i = k; i < j_personagens.length; i++)
 	    {
-	      jog = jogadores.get(i);
-	      resultado = r.verifica_palpite(jog, suspeito, arma, comodo);
+	      j_investigado = j_personagens[i];
+	      resultado = r.verifica_palpite(j_investigado, suspeito, arma, comodo);
 	      
 	      if (resultado != null)
 	      {
@@ -72,8 +83,8 @@ public class Controller
 
 	    for(i = 0; i < k; i++)
 	    {
-	      jog = jogadores.get(i);
-	      resultado = r.verifica_palpite(jog, suspeito, arma, comodo);
+	      j_investigado = j_personagens[i];
+	      resultado = r.verifica_palpite(j_investigado, suspeito, arma, comodo);
 	      
 	      if (resultado != null)
 	      {

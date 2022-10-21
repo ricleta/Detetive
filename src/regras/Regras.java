@@ -2,7 +2,7 @@ package regras;
 
 import java.util.*;
 
-class Regras 
+public class Regras
 {
       /**** atributos ****/
 	  private String suspeitos[] = {"Srta. Scarlet", "Coronel Mustard", "Professor Plum", "Reverendo Green", "Sra. White", "Sra. Peacock"};
@@ -20,7 +20,7 @@ class Regras
 	  ArrayList <Jogador> jogadores; 
 
 	  /**** construtor e métodos ****/
-	  Regras(int num_jogadores)
+	  public Regras(int num_jogadores)
 	  {
 	    jogadores = new ArrayList <Jogador>();
 
@@ -28,14 +28,44 @@ class Regras
 	    jogadores.add(new Jogador(0, 0, suspeitos[0]));
 	  }
 
-	  ArrayList <Jogador> getJogadores()
+	  // mudar teste
+	  public String [] getNomeJogadores()
 	  {
-		  return jogadores;
+		  String [] nomes = new String[jogadores.size()];
+		  for (int i = 0; i < jogadores.size(); i++)
+		  {
+			 nomes[i] = jogadores.get(i).getPersonagem();
+		  }
+		  
+		  return nomes;
 	  }
 	  
-	  void add_jogador(String personagem)
+	  // criar teste
+	  public boolean [] getStatusJogadores()
+	  {
+		  boolean [] estados = new boolean[jogadores.size()];
+		  for (int i = 0; i < jogadores.size(); i++)
+		  {
+			 estados[i] = jogadores.get(i).getEliminado();
+		  }
+		  
+		  return estados;
+	  }
+	  
+	  public void add_jogador(String personagem)
 	  {
 	    jogadores.add(new Jogador(0, 0, personagem));
+	  }
+	  
+	  public void set_jogador_eliminado(String personagem)
+	  {
+		  for (Jogador j: jogadores)
+		  {
+			  if(j.getPersonagem().equals(personagem))
+			  {
+				  j.setEliminado();
+			  }
+		  }
 	  }
 
 	  /* 3 cartas, 1 de cada tipo selecionadas randomicamente para o envelope */
@@ -49,7 +79,7 @@ class Regras
 	  }
 	  
 	  // usado para testar set_envelope, por envelope ser private
-	  String [] get_envelope()
+	  public String [] get_envelope()
 	  {
 		  return envelope;
 	  }
@@ -90,7 +120,7 @@ class Regras
 	  }
 
 	  /* método para distribuir as 18 cartas entre N jogadores */
-	  void distribui()
+	  public void distribui()
 	  {
 		  this.set_envelope();
 		  this.embaralhador();
@@ -128,24 +158,9 @@ class Regras
 	      }
 	    }
 	  }
-
-	  /* Jogador j faz uma acusação sobre os dados do assassinato. Se a acusação estiver correta, j vence o jogo, caso contrário é eliminado */
-	  boolean faz_acusacao(Jogador j, String suspeito, String arma, String comodo)
-	  {    
-	    if (verifica_acusacao(suspeito, arma, comodo))
-	    {
-	      // main deve encerrar jogo atual
-	      return true;
-	    }
-	    else
-	    {
-	      j.setEliminado();
-	      return false;
-	    }
-	  }
 	  
 	  /* verifica se a acusação feita pelo jogador está correta comparando as cartas do envelope com as informações da acusação */
-	  boolean verifica_acusacao(String suspeito, String arma, String comodo)
+	  public boolean verifica_acusacao(String suspeito, String arma, String comodo)
 	  {
 	    if(envelope[0].equals(suspeito))
 	    {
@@ -161,9 +176,25 @@ class Regras
 	    return false;
 	  }
 	  
-	  /* verifica se alguma das cartas do palpite está na mão do jogador. Se estiver, o palpite está errado */
-	  String verifica_palpite(Jogador prox_jog, String suspeito, String arma, String comodo)
+	  Jogador encontra_jogador(String personagem)
 	  {
+		  for (Jogador j: jogadores)
+		  {
+			  if (j.getPersonagem().equals(personagem))
+			  {
+				  return j;
+			  }
+		  }
+		  
+		return null;
+	  }
+	  
+	  /* verifica se alguma das cartas do palpite está na mão do jogador. Se estiver, o palpite está errado */
+	  public String verifica_palpite(String persona_prox_jog, String suspeito, String arma, String comodo)
+	  {
+		
+		Jogador prox_jog = encontra_jogador(persona_prox_jog);
+		  
 		for(String carta : prox_jog.get_cartas())
 	    {
 	      if(carta.equals(suspeito))
