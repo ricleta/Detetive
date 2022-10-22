@@ -1,5 +1,3 @@
-// usado para exibir imagem, nao funciona
-
 package gui;
 
 import java.awt.Graphics;
@@ -20,6 +18,6 @@ public class TabPanel extends JPanel
 	{
 		super.paintComponent(g);
 		
-		g.drawImage(image, 1000, 1000, null);
+		g.drawImage(image, 0, 0, null);
 	}
 }
