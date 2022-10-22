@@ -27,7 +27,8 @@ public class TelaPersonagens  extends JFrame implements ActionListener{
 	      this.add(boxes[i]);
 	      boxes[i].setBounds(1000, 200 + (50 * i), 200, 50);
 	    }
-	    
+
+      /* faz com que Srta. Scarlet seja obrigatoriamente uma das jogadoras */
 	    boxes[0].setSelected(true); 
 	    boxes[0].setEnabled(false);
 
@@ -37,19 +38,23 @@ public class TelaPersonagens  extends JFrame implements ActionListener{
 	  }
 
 	  public void actionPerformed(ActionEvent e){
-	    if(e.getSource() == iniciarJogo){
+	    if(e.getSource() == iniciarJogo)
+      {
 	      if(this.checkJogValidos() != -1)
         {
 	      System.out.println(n_jogadores);
           TelaJogo t_jogo = new TelaJogo();
           this.dispose();
 	      }
-	      else{
-	        System.out.println("N pode "+n_jogadores);
+	      else
+        {
+	        System.out.println("N pode "+n_jogadores); //// mudar isso aqui pra mensagem de erro exibida na própria tela
 	      }
 	    }
 	  }
 
+
+    /* verifica o número de boxes selecionadas para averiguar se é possível iniciar o jogo */
 	  public int checkJogValidos(){
 	    n_jogadores = 0;
 	    

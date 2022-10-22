@@ -9,7 +9,7 @@ public class Regras
 
 	  private String armas[] = {"Corda", "Cano de Chumbo", "Faca", "Chave Inglesa", "Castical", "Revolver"}; 
 
-	  private String comodos[] = {"Banheiro", "Escritorio", "Sala de Estar", "Sala de jogos", "Garagem", "Quarto", "Sala de Estudos", "Cozinha", "Patio"};
+	  private String comodos[] = {"Biblioteca", "Cozinha", "Entrada", "Escritorio", "Jardim de Inverno", "Sala de Estar", "Sala de Jantar", "Sala de Jogos", "Sala de Musica"};
 
 	  // 0 -> suspeito, 1 -> arma, 2-> comodo
 	  protected String envelope[] = new String[3];
