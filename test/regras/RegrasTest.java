@@ -12,7 +12,7 @@ public class RegrasTest {
 
 	private String armas[] = {"Corda", "Cano de Chumbo", "Faca", "Chave Inglesa", "Castical", "Revolver"}; 
 
-	private String comodos[] = {"Biblioteca", "Cozinha", "Entrada", "Escritorio", "Jardim de Inverno", "Sala de Estar", "Sala de Jogos", "Sala de Musica"};
+	private String comodos[] = {"Biblioteca", "Cozinha", "Entrada", "Escritorio", "Jardim de Inverno", "Sala de Estar", "Sala de Jantar", "Sala de Musica", "Salao de Jogos"};
 
 	private ArrayList<String> l_suspeitos = new ArrayList<String>(Arrays.asList(suspeitos));
 	private ArrayList<String> l_armas = new ArrayList<String>(Arrays.asList(armas));

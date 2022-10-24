@@ -47,8 +47,8 @@ class Notas extends JFrame /*implements ActionListener*/{
     comodos[4] = new JCheckBox("Jardim de Inverno");
     comodos[5] = new JCheckBox("Sala de Estar"); 
     comodos[6] = new JCheckBox("Sala de Jantar");     
-    comodos[7] = new JCheckBox("Sala de Jogos"); 
-    comodos[8] = new JCheckBox("Sala de Musica"); 
+    comodos[7] = new JCheckBox("Sala de Musica"); 
+    comodos[8] = new JCheckBox("Salao de Jogos"); 
 
     for(i = 0; i < 6; i++){
       this.add(suspeitos[i]);
