@@ -43,7 +43,7 @@ public class Controller
 	{
 		Random random = new Random();
 		    
-		return random.nextInt(1,7);
+		return random.nextInt(1,7) + random.nextInt(1,7);
 	}
 	
 	/* Jogador j faz uma acusação sobre os dados do assassinato. Se a acusação estiver correta, j vence o jogo, caso contrário é eliminado */
