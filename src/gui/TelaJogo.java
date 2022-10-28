@@ -62,8 +62,8 @@ public class TelaJogo extends JFrame implements ActionListener
 	  notepad.addActionListener(this);
 	    
 	  this.add(palpite);
-	  palpite.setBounds(1020,300,150,50);
-	  palpite.addActionListener(this);
+  	palpite.setBounds(1020,300,150,50);
+  	palpite.addActionListener(this);
 	    
 	  this.add(acusar);
 	  acusar.setBounds(1020,350,150,50);
@@ -94,14 +94,20 @@ public class TelaJogo extends JFrame implements ActionListener
     else if(e.getSource() == notepad)
     {
       Notas bloco = new Notas();
+      
     }
     else if(e.getSource() == palpite)
     {
-      
+      ////// tem q verificar se o jogador ta dentro do quarto pra poder fzr o palpite
+     PalpiteAcusacao palpite = new PalpiteAcusacao("Palpite");
+
+      ///// botar as paradas de palpite
     }
     else if(e.getSource() == acusar)
     {
-      
+     PalpiteAcusacao acusacao = new PalpiteAcusacao("Acusacao");
+
+      ///// botar as paradas de acusacao
     }
     else if(e.getSource() == save_game)
     {
@@ -109,7 +115,7 @@ public class TelaJogo extends JFrame implements ActionListener
     }
     else if(e.getSource() == dado)
     {
-      
+      ///// rodar os dados, mudar a imagem dependendo dos resultados
     }
   }
   

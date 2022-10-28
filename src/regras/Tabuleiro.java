@@ -1,17 +1,20 @@
 package regras;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class Tabuleiro 
 {
   // imagem do tabuleiro 25 * 24 quadrados, alguns nao acessiveis
   Cell[][] tab;
-  private final int altura = 25; // 25
-  private final int largura = 24; // 24
+  private final int altura = 25;
+  private final int largura = 24;
   
   public Tabuleiro() 
   {
     tab = new Cell[altura][largura];
 
-    /* Separando áreas dos comodos e indicando células de porta */
+    /* Separando áreas dos comodos */
     this.set_area_comodo(0, 0, 5, 5, "Cozinha");
     this.set_area_comodo(1, 6, 5, 6, "Cozinha");
     tab[6][4].set_estado(2);
@@ -111,7 +114,9 @@ public class Tabuleiro
     }
   }
 
-  /* áreas que não tiverem sido alocadas como cômodo ou como inacessíveis */
+  // chamar isso aqui dps de settar areas n transitaveis e settar comodos -> areas
+  // q n tiverem alocadas vao ser os corredores/demais areas q pode passar ->
+  // menos trabalhoso do q chamar o metodo de cima 400 vzs
   void set_transitavel() 
   {
     for (int i = 0; i < altura; i++) 
@@ -125,55 +130,18 @@ public class Tabuleiro
       }
     }
   }
+  
 
-  // nao pode ser public, esta publica testar, assim como cell deve estar para testes temporarios, testes finais (com JUnit devem ser feitos com default)
+  // nao pode ser public
   // n_mov -> numero de casas que o jogador pode andar, de acordo com o valor do
   // dado
-  public Cell[] encontra_movimentos(Cell atual, int n_mov) 
+  public ArrayList<Cell> encontra_movimentos(Cell atual, int n_mov)
   {
-	  
-	// ----TODO-----
-    ArrayList <Cell> visitados = new ArrayList <Cell>();
-    visitados.add(atual);
-    ArrayList <Cell> destinos_poss = new ArrayList <Cell>();
-    
-    for (int i = 0; i < n_mov; i++)
-    {
-    	int x_atual = atual.get_X();
-    	int y_atual = atual.get_Y();
-    	
-    	int x_dir = atual.get_X() + 1;
-    	int x_esq = atual.get_X() - 1; 
-    	
-    	int y_cima = atual.get_Y() - 1;
-    	int y_baixo = atual.get_Y() + 1;
-    	
-    	// checa celula acima
-    	if (y_atual > 0 && tab[y_cima][x_atual].get_estado() == 0)
-    	{
-    		System.out.printf("\nx = %d, y = %d\n", x_atual, y_cima);
-    	}
-    	
-    	// checa celula abaixo
-    	if (y_atual < altura && tab[y_baixo][x_atual].get_estado() == 0)
-    	{
-    		System.out.printf("\nx = %d, y = %d\n", x_atual, y_baixo);
-    	}
-    	
-    	// checa celula da direita
-    	if (x_atual < largura &&  tab[y_atual][x_dir].get_estado() == 0)
-    	{
-    		System.out.printf("\nx = %d, y = %d\n", x_dir, y_atual);
-    	}
-    	
-    	// checa celula da esquerda
-    	if (x_atual > 0 && tab[y_atual][x_esq].get_estado() == 0)
-    	{
-    		System.out.printf("\nx = %d, y = %d\n", x_esq, y_atual);
-    	}
-    }
-
-    return null;
+	Movimento m = new Movimento(tab);
+	ArrayList <Cell> c = new ArrayList <Cell>();
+	
+	c.add(atual);
+	return m.encontra_mov(c, n_mov);
   }
 
   // retirar dps
