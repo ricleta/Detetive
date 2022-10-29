@@ -4,77 +4,106 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-class PalpiteAcusacao extends JFrame implements ActionListener{
-  JRadioButton[] suspeitos = new JRadioButton[6];
-  JRadioButton[] armas = new JRadioButton[6];
-  JRadioButton[] comodos = new JRadioButton[9];
-  ButtonGroup suspeitosGroup = new ButtonGroup();
-  ButtonGroup armasGroup = new ButtonGroup();
-  ButtonGroup comodosGroup = new ButtonGroup();
-  String[] returns = new String[3]; //// n sei como q retornaria os palpites, ver isso daqui
-  int i;
+class PalpiteAcusacao extends JFrame implements ActionListener{ 
+  String[] suspeitos = new String[6];
+  String[] armas = new String[6];
+  String[] comodos = new String[9];
+  JComboBox suspeitosBox;
+  JComboBox armasBox;
+  JComboBox comodosBox;
+  JButton confirmar; 
+  JLabel label = new JLabel("Selecione um suspeito, uma arma e um comodo para fazer o palpite");
+  private String[] palpite = new String[3];
+  private int cont_selected = 0;
 
+  /* construtor recebe uma String que indica se será Palpite ou Acusação */
   PalpiteAcusacao(String tipo){
     this.setVisible(true);
     this.pack();
     this.setLayout(new FlowLayout());
     this.setTitle(tipo);
-    this.setSize(450, 450);
+    this.setSize(300, 300);
+    
+    label.setBounds(10, 10, 200, 200); //// corrigir isso daqui
+    this.add(label);
 
-    suspeitos[0] = new JRadioButton("Srta. Scarlet");
-    suspeitos[1] = new JRadioButton("Coronel Mustard");
-    suspeitos[2] = new JRadioButton("Professor Plum");
-    suspeitos[3] = new JRadioButton("Reverendo Green");
-    suspeitos[4] = new JRadioButton("Sra. White");
-    suspeitos[5] = new JRadioButton("Sra. Peacock"); 
+    confirmar = new JButton("Confirmar "+tipo);
+    confirmar.setBounds(50, 150, 100, 50);
+    confirmar.addActionListener(this);
+    this.add(confirmar);
 
-    armas[0] = new JRadioButton("Corda");
-    armas[1] = new JRadioButton("Cano de Chumbo");
-    armas[2] = new JRadioButton("Faca");
-    armas[3] = new JRadioButton("Chave Inglesa");
-    armas[4] = new JRadioButton("Castical");
-    armas[5] = new JRadioButton("Revolver"); 
+    /* tratamento relativo a suspeitos */
+    suspeitos[0] = "Srta. Scarlet";
+    suspeitos[1] = "Coronel Mustard";
+    suspeitos[2] = "Professor Plum";
+    suspeitos[3] = "Reverendo Green";
+    suspeitos[4] = "Sra. White";
+    suspeitos[5] = "Sra. Peacock"; 
 
-    comodos[0] = new JRadioButton("Biblioteca");
-    comodos[1] = new JRadioButton("Cozinha");
-    comodos[2] = new JRadioButton("Entrada");
-    comodos[3] = new JRadioButton("Escritorio");
-    comodos[4] = new JRadioButton("Jardim de Inverno");
-    comodos[5] = new JRadioButton("Sala de Estar"); 
-    comodos[6] = new JRadioButton("Sala de Jantar");     
-    comodos[7] = new JRadioButton("Sala de Jogos"); 
-    comodos[8] = new JRadioButton("Sala de Musica"); 
+    suspeitosBox = new JComboBox(suspeitos);
+    suspeitosBox.addActionListener(this);
+    this.add(suspeitosBox);
 
-    for(i = 0; i < 6; i++){
-      suspeitos[i].setFocusable(false);
-      suspeitos[i].addActionListener(this);
-      // suspeitos[i].setBounds(5, 30+i*40, 140, 35);
-      this.add(suspeitos[i]);
-      suspeitosGroup.add(suspeitos[i]);
+    /* tratamento relativo a armas */
+    armas[0] = "Corda";
+    armas[1] = "Cano de Chumbo";
+    armas[2] = "Faca";
+    armas[3] = "Chave Inglesa";
+    armas[4] = "Castical";
+    armas[5] = "Revolver"; 
 
-      armas[i].setFocusable(false);
-      armas[i].addActionListener(this);
-      // armas[i].setBounds(150, 30+i*40, 140, 35);
-      this.add(armas[i]);
-      armasGroup.add(armas[i]);
+    armasBox = new JComboBox(armas);
+    armasBox.addActionListener(this);
+    this.add(armasBox);
 
-      comodos[i].setFocusable(false);
-      comodos[i].addActionListener(this);
-      // comodos[i].setBounds(295, 30+i*40, 160, 35);
-      this.add(comodos[i]);
-      comodosGroup.add(comodos[i]);
-    }
-
-    for(i = 6; i < 9; i++){
-      comodos[i].setFocusable(false);
-      comodos[i].addActionListener(this);
-      // comodos[i].setBounds(295, 30+i*40, 160, 35);
-      this.add(comodos[i]);
-      comodosGroup.add(comodos[i]);
-    }    
+    /* tratamento relativo a comodos */
+    comodos[0] = "Biblioteca";
+    comodos[1] = "Cozinha";
+    comodos[2] = "Entrada";
+    comodos[3] = "Escritorio";
+    comodos[4] = "Jardim de Inverno";
+    comodos[5] = "Sala de Estar"; 
+    comodos[6] = "Sala de Jantar";     
+    comodos[7] = "Sala de Jogos"; 
+    comodos[8] = "Sala de Musica";
+    
+    comodosBox = new JComboBox(comodos);
+    comodosBox.addActionListener(this);
+    this.add(comodosBox);
   }
 
   public void actionPerformed(ActionEvent e) {
-    // TODO
+    /* verifica se já foi selecionado um suspeito, uma arma e um cômodo */
+    if(e.getSource() == confirmar && cont_selected == 3){
+      System.out.printf("S: %s\nA: %s\nC: %s\n", palpite[0], palpite[1], palpite[2]); // testar se funcionou (sim)
+      
+      /////// vai retornar o palpite/acusacao com get_retorno()
+    }
+      
+    /* selecionando as combobox, adiciona o elemento selecionado na respectiva posição do array de retorno. Se estiverem sendo selecionadas pela primeira vez incrementao contador */
+    else if(e.getSource() == suspeitosBox){
+      if(palpite[0] == null){
+        cont_selected++;
+      }
+      palpite[0] = (String)suspeitosBox.getSelectedItem();
+    }
+
+    else if(e.getSource() == armasBox){
+      if(palpite[1] == null){
+        cont_selected++;
+      }
+      palpite[1] = (String)armasBox.getSelectedItem();
+    }
+
+    else if(e.getSource() == comodosBox){
+      if(palpite[2] == null){
+        cont_selected++;
+      }
+      palpite[2] = (String)comodosBox.getSelectedItem();
+    }
+  }
+
+  public String[] get_retorno(){
+    return palpite;
   }  
 }

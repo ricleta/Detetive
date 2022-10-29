@@ -5,18 +5,19 @@ import java.awt.event.*;
 import javax.swing.*;
 
 class CartasMostradas extends JFrame{
-
+  // Image[] suspeitos;
+  // Image[] armas;
+  // Image[] comodos;
+  
   JPanel p;
   
   CartasMostradas()
   {
-    this.setSize(500,500);
+    this.setSize(700,700);
     this.setLayout(null);
     this.setTitle("Selecione os personagens do jogo");
     this.setVisible(true);
     
-
-
 
     
   }
@@ -24,8 +25,10 @@ class CartasMostradas extends JFrame{
   public void paint(Graphics g)
 	{
 		super.paint(g);
-		
-		// g.drawImage(img_tabuleiro, 1000, 1000, this); //// mudar pra permitir uma imagem generica ou sla
+
+    // for(Image img: cartas){
+		  // g.drawImage(cartas, 1000, 1000, this); 
+    // }
 	}
 
 

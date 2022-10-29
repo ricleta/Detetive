@@ -4,14 +4,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class TelaJogo extends JFrame implements ActionListener
 {
   Image img_tabuleiro;
+  Image dado1, dado2;
   JPanel p;
+  JLabel jog_vez = new JLabel("Jogador da vez: "); 
   
   JButton passagemSecreta = new JButton("Passagem Secreta");
   JButton proximo = new JButton("Proximo");
@@ -44,6 +45,9 @@ public class TelaJogo extends JFrame implements ActionListener
 	  p.setBounds(100, 0, 700, 700);
 	  p.setBackground(Color.white);
 	  this.getContentPane().add(p);
+
+    this.add(jog_vez);
+	  jog_vez.setBounds(1020, 20,100,50);
 	  
 	  this.add(passagemSecreta);
 	  passagemSecreta.setBounds(1020,100,150,50);
@@ -89,7 +93,7 @@ public class TelaJogo extends JFrame implements ActionListener
     }
     else if(e.getSource() == show_cards)
     {
-      
+     CartasMostradas cartasMostradas = new CartasMostradas(); 
     }
     else if(e.getSource() == notepad)
     {
@@ -113,8 +117,26 @@ public class TelaJogo extends JFrame implements ActionListener
     {
       
     }
+    //// testar pra ver se isso funciona
     else if(e.getSource() == dado)
     {
+      int num1, num2;
+
+      num1 = 1; // SO TESTANDO
+      num2 = 4; // SO TESTANDO
+
+      try 
+  	  {
+        /* pegar imagem do dado correspondente ao número */
+  		  dado1 = ImageIO.read(new File(String.format("images/dados/dado%d.jpg", num1)));
+        dado2 = ImageIO.read(new File(String.format("images/dados/dado%d.jpg", num2)));
+  	  } 
+  	  catch(IOException ex)
+  	  {
+  		 System.out.println(ex.getMessage());
+  		 System.exit(1);
+  	  }
+
       ///// rodar os dados, mudar a imagem dependendo dos resultados
     }
   }

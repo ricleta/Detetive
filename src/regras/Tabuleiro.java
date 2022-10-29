@@ -1,7 +1,6 @@
 package regras;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class Tabuleiro 
 {
@@ -98,7 +97,7 @@ public class Tabuleiro
     {
       for (int j = x_ini; j <= x_fim; j++) 
       {
-        tab[i][j] = new Cell(i, j, null, 1);
+        tab[i][j] = new Cell(j, i, null, 1);
       }
     }
   }
@@ -109,7 +108,7 @@ public class Tabuleiro
     {
       for (int j = x_ini; j <= x_fim; j++) 
       {
-        tab[i][j] = new Cell(i, j, comodo, 1);
+        tab[i][j] = new Cell(j, i, comodo, 1);
       }
     }
   }
@@ -125,7 +124,7 @@ public class Tabuleiro
       {
         if (tab[i][j] == null) 
         {
-          tab[i][j] = new Cell(i, j, null, 0);
+          tab[i][j] = new Cell(j, i, null, 0);
         }
       }
     }
@@ -135,7 +134,7 @@ public class Tabuleiro
   // nao pode ser public
   // n_mov -> numero de casas que o jogador pode andar, de acordo com o valor do
   // dado
-  public ArrayList<Cell> encontra_movimentos(Cell atual, int n_mov)
+  public ArrayList <Cell> encontra_movimentos(Cell atual, int n_mov)
   {
 	Movimento m = new Movimento(tab);
 	ArrayList <Cell> c = new ArrayList <Cell>();
