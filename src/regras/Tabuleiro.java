@@ -1,8 +1,6 @@
 package regras;
 
-import java.util.ArrayList;
-
-public class Tabuleiro 
+class Tabuleiro 
 {
   // imagem do tabuleiro 25 * 24 quadrados, alguns nao acessiveis
   Cell[][] tab;
@@ -130,21 +128,8 @@ public class Tabuleiro
     }
   }
   
-
-  // nao pode ser public
-  // n_mov -> numero de casas que o jogador pode andar, de acordo com o valor do
-  // dado
-  public ArrayList <Cell> encontra_movimentos(Cell atual, int n_mov)
-  {
-	Movimento m = new Movimento(tab);
-	ArrayList <Cell> c = new ArrayList <Cell>();
-	
-	c.add(atual);
-	return m.encontra_mov(c, n_mov);
-  }
-
   // retirar dps
-  public void print() 
+  void print() 
   {
     for (int i = 0; i < altura; i++) 
     {

@@ -2,7 +2,7 @@ package regras;
 
 import java.util.*;
 
-public class Regras
+class Regras
 {
       /**** atributos ****/
 	  private String suspeitos[] = {"Srta. Scarlet", "Coronel Mustard", "Professor Plum", "Reverendo Green", "Sra. White", "Sra. Peacock"};
@@ -20,16 +20,18 @@ public class Regras
 	  ArrayList <Jogador> jogadores; 
 
 	  /**** construtor e métodos ****/
-	  public Regras(int num_jogadores)
+	  Regras(int num_jogadores, ArrayList <String> personagens)
 	  {
 	    jogadores = new ArrayList <Jogador>();
 
-	    // Srta scarlet e sempre a primeira a jogar, então deve sempre existir numa partida
-	    jogadores.add(new Jogador(0, 0, suspeitos[0]));
+	    for (String s: personagens)
+	    {
+	    	jogadores.add(new Jogador(s));
+	    }
 	  }
 
 	  // mudar teste
-	  public String [] getNomeJogadores()
+	  String [] getNomeJogadores()
 	  {
 		  String [] nomes = new String[jogadores.size()];
 		  for (int i = 0; i < jogadores.size(); i++)
@@ -41,7 +43,7 @@ public class Regras
 	  }
 	  
 	  // criar teste
-	  public boolean [] getStatusJogadores()
+	  boolean [] getStatusJogadores()
 	  {
 		  boolean [] estados = new boolean[jogadores.size()];
 		  for (int i = 0; i < jogadores.size(); i++)
@@ -52,12 +54,7 @@ public class Regras
 		  return estados;
 	  }
 	  
-	  public void add_jogador(String personagem)
-	  {
-	    jogadores.add(new Jogador(0, 0, personagem));
-	  }
-	  
-	  public void set_jogador_eliminado(String personagem)
+	  void set_jogador_eliminado(String personagem)
 	  {
 		  for (Jogador j: jogadores)
 		  {
@@ -160,7 +157,7 @@ public class Regras
 	  }
 	  
 	  /* verifica se a acusação feita pelo jogador está correta comparando as cartas do envelope com as informações da acusação */
-	  public boolean verifica_acusacao(String suspeito, String arma, String comodo)
+	  boolean verifica_acusacao(String suspeito, String arma, String comodo)
 	  {
 	    if(envelope[0].equals(suspeito))
 	    {
@@ -190,7 +187,7 @@ public class Regras
 	  }
 	  
 	  /* verifica se alguma das cartas do palpite está na mão do jogador. Se estiver, o palpite está errado */
-	  public String verifica_palpite(String persona_prox_jog, String suspeito, String arma, String comodo)
+	  String verifica_palpite(String persona_prox_jog, String suspeito, String arma, String comodo)
 	  {
 		
 		Jogador prox_jog = encontra_jogador(persona_prox_jog);

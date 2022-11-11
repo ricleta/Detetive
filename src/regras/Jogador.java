@@ -12,15 +12,17 @@ class Jogador
   private Color cor;
   private ArrayList <String> cartas = new ArrayList<String>();  
   private boolean eliminado;
+  Boolean[] checked_suspeitos = new Boolean[6]; 
+  Boolean[] checked_armas = new Boolean[6];
+  Boolean[] checked_comodos = new Boolean[9];
 
   /**** construtor e métodos ****/
-  
   // Selecao de nome feita de uma lista na gui, não pode ser inválida
   Jogador(String personagem) 
   {
     this.personagem = personagem;
     this.eliminado = false;
-    this.setInicio(personagem);
+    this.inicializa_checkeds();
   }
 
   /* retorna a posição do jogador no eixo x */
@@ -65,45 +67,18 @@ class Jogador
     this.y = y;
   }
 
-  /* setta a cor do jogador dependendo do personagem */
-  void setInicio(String personagem)
-  {
-    if(personagem.equals("Srta. Scarlet"))
-    {
-      cor = Color.RED;
-      x = 24;
-      y = 7;
+  private void inicializa_checkeds(){
+    int i;
+
+    for(i = 0; i < 6; i++){
+      checked_suspeitos[i] = false;
+      checked_armas[i] = false;
+      checked_comodos[i] = false;
     }
-    else if(personagem.equals("Coronel Mustard"))
-    {
-      cor = Color.YELLOW;
-      x = 17;
-      y = 0;
+    for(i = 6; i < 9; i++){
+      checked_comodos[i] = false;
     }
-    else if(personagem.equals("Professor Plum"))
-    {
-      cor = new Color(102, 0 ,153); // cor roxo em RGB
-      x = 19;
-      y = 23;
-    }
-    else if(personagem.equals("Reverendo Green"))
-    {
-      cor = Color.GREEN;
-      x = 0;
-      y = 14;
-    }
-    else if(personagem.equals("Sra. White"))
-    {
-      cor = Color.WHITE;
-      x = 0;
-      y = 9;
-    }
-    else if(personagem.equals("Sra. Peacock"))
-    {
-      cor = Color.BLUE;
-      x = 6;
-      y = 23;
-    }
+
   }
 
   /* elimina o jogador do jogo */

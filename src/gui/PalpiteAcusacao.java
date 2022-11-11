@@ -4,106 +4,114 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-class PalpiteAcusacao extends JFrame implements ActionListener{ 
-  String[] suspeitos = new String[6];
-  String[] armas = new String[6];
-  String[] comodos = new String[9];
-  JComboBox suspeitosBox;
-  JComboBox armasBox;
-  JComboBox comodosBox;
-  JButton confirmar; 
-  JLabel label = new JLabel("Selecione um suspeito, uma arma e um comodo para fazer o palpite");
-  private String[] palpite = new String[3];
-  private int cont_selected = 0;
+class PalpiteAcusacao extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-  /* construtor recebe uma String que indica se será Palpite ou Acusação */
-  PalpiteAcusacao(String tipo){
-    this.setVisible(true);
-    this.pack();
-    this.setLayout(new FlowLayout());
-    this.setTitle(tipo);
-    this.setSize(300, 300);
-    
-    label.setBounds(10, 10, 200, 200); //// corrigir isso daqui
-    this.add(label);
+	String[] suspeitos = new String[7];
+	String[] armas = new String[7];
+	String[] comodos = new String[10];
+	JComboBox<String> suspeitosBox;
+	JComboBox<String> armasBox;
+	JComboBox<String> comodosBox;
+	JButton confirmar;
+	private String[] palpite = new String[3];
+	private int cont_selected = 0;
 
-    confirmar = new JButton("Confirmar "+tipo);
-    confirmar.setBounds(50, 150, 100, 50);
-    confirmar.addActionListener(this);
-    this.add(confirmar);
+	/* construtor recebe uma String que indica se será Palpite ou Acusação */
+	PalpiteAcusacao(String tipo) {
+		this.setVisible(true);
+		this.pack();
+		this.setLayout(new FlowLayout());
+		this.setTitle(tipo);
+		this.setSize(300, 300);
 
-    /* tratamento relativo a suspeitos */
-    suspeitos[0] = "Srta. Scarlet";
-    suspeitos[1] = "Coronel Mustard";
-    suspeitos[2] = "Professor Plum";
-    suspeitos[3] = "Reverendo Green";
-    suspeitos[4] = "Sra. White";
-    suspeitos[5] = "Sra. Peacock"; 
+		confirmar = new JButton("Confirmar " + tipo);
+		confirmar.setBounds(50, 150, 100, 50);
+		confirmar.addActionListener(this);
+		this.add(confirmar);
 
-    suspeitosBox = new JComboBox(suspeitos);
-    suspeitosBox.addActionListener(this);
-    this.add(suspeitosBox);
+		/* tratamento relativo a suspeitos */
+		suspeitos[0] = "Suspeito";
+		suspeitos[1] = "Srta. Scarlet";
+		suspeitos[2] = "Coronel Mustard";
+		suspeitos[3] = "Professor Plum";
+		suspeitos[4] = "Reverendo Green";
+		suspeitos[5] = "Sra. White";
+		suspeitos[6] = "Sra. Peacock";
 
-    /* tratamento relativo a armas */
-    armas[0] = "Corda";
-    armas[1] = "Cano de Chumbo";
-    armas[2] = "Faca";
-    armas[3] = "Chave Inglesa";
-    armas[4] = "Castical";
-    armas[5] = "Revolver"; 
+		suspeitosBox = new JComboBox<String>(suspeitos);
+		suspeitosBox.addActionListener(this);
+		this.add(suspeitosBox);
 
-    armasBox = new JComboBox(armas);
-    armasBox.addActionListener(this);
-    this.add(armasBox);
+		/* tratamento relativo a armas */
+		armas[0] = "Arma";
+		armas[1] = "Corda";
+		armas[2] = "Cano de Chumbo";
+		armas[3] = "Faca";
+		armas[4] = "Chave Inglesa";
+		armas[5] = "Castical";
+		armas[6] = "Revolver";
 
-    /* tratamento relativo a comodos */
-    comodos[0] = "Biblioteca";
-    comodos[1] = "Cozinha";
-    comodos[2] = "Entrada";
-    comodos[3] = "Escritorio";
-    comodos[4] = "Jardim de Inverno";
-    comodos[5] = "Sala de Estar"; 
-    comodos[6] = "Sala de Jantar";     
-    comodos[7] = "Sala de Jogos"; 
-    comodos[8] = "Sala de Musica";
-    
-    comodosBox = new JComboBox(comodos);
-    comodosBox.addActionListener(this);
-    this.add(comodosBox);
-  }
+		armasBox = new JComboBox<String>(armas);
+		armasBox.addActionListener(this);
+		this.add(armasBox);
 
-  public void actionPerformed(ActionEvent e) {
-    /* verifica se já foi selecionado um suspeito, uma arma e um cômodo */
-    if(e.getSource() == confirmar && cont_selected == 3){
-      System.out.printf("S: %s\nA: %s\nC: %s\n", palpite[0], palpite[1], palpite[2]); // testar se funcionou (sim)
-      
-      /////// vai retornar o palpite/acusacao com get_retorno()
-    }
-      
-    /* selecionando as combobox, adiciona o elemento selecionado na respectiva posição do array de retorno. Se estiverem sendo selecionadas pela primeira vez incrementao contador */
-    else if(e.getSource() == suspeitosBox){
-      if(palpite[0] == null){
-        cont_selected++;
-      }
-      palpite[0] = (String)suspeitosBox.getSelectedItem();
-    }
+		/* tratamento relativo a comodos */
+		comodos[0] = "Comodo";
+		comodos[1] = "Biblioteca";
+		comodos[2] = "Cozinha";
+		comodos[3] = "Entrada";
+		comodos[4] = "Escritorio";
+		comodos[5] = "Jardim de Inverno";
+		comodos[6] = "Sala de Estar";
+		comodos[7] = "Sala de Jantar";
+		comodos[8] = "Sala de Jogos";
+		comodos[9] = "Sala de Musica";
 
-    else if(e.getSource() == armasBox){
-      if(palpite[1] == null){
-        cont_selected++;
-      }
-      palpite[1] = (String)armasBox.getSelectedItem();
-    }
+		comodosBox = new JComboBox<String>(comodos);
+		comodosBox.addActionListener(this);
+		this.add(comodosBox);
+	}
 
-    else if(e.getSource() == comodosBox){
-      if(palpite[2] == null){
-        cont_selected++;
-      }
-      palpite[2] = (String)comodosBox.getSelectedItem();
-    }
-  }
+	public void actionPerformed(ActionEvent e) {
+		/* verifica se já foi selecionado um suspeito, uma arma e um cômodo */
+		if (e.getSource() == confirmar && cont_selected == 3) {
+			System.out.printf("S: %s\nA: %s\nC: %s\n", palpite[0], palpite[1], palpite[2]); // testar se funcionou (sim)
 
-  public String[] get_retorno(){
-    return palpite;
-  }  
+			/////// vai retornar o palpite/acusacao com get_retorno()
+		}
+
+		/*
+		 * selecionando as combobox, adiciona o elemento selecionado na respectiva
+		 * posição do array de retorno. Se estiverem sendo selecionadas pela primeira
+		 * vez incrementao contador
+		 */
+		else if (e.getSource() == suspeitosBox && !suspeitosBox.getSelectedItem().equals(suspeitos[0])) {
+			if (palpite[0] == null) {
+				cont_selected++;
+			}
+			palpite[0] = (String) suspeitosBox.getSelectedItem();
+		}
+
+		else if (e.getSource() == armasBox && !armasBox.getSelectedItem().equals(armas[0])) {
+			if (palpite[1] == null) {
+				cont_selected++;
+			}
+			palpite[1] = (String) armasBox.getSelectedItem();
+		}
+
+		else if (e.getSource() == comodosBox && !comodosBox.getSelectedItem().equals(comodos[0])) {
+			if (palpite[2] == null) {
+				cont_selected++;
+			}
+			palpite[2] = (String) comodosBox.getSelectedItem();
+		}
+	}
+
+	public String[] get_retorno() {
+		return palpite;
+	}
 }

@@ -1,49 +1,55 @@
-/////////////////////REFAZER
-
 package controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import regras.*;
+import gui.*;
 
 public class Controller
 {
-	Regras r;
-	String [] j_personagens; // array para conter nome dos personagens de cada jogador
-	boolean [] j_estados; // array para conter a boolean que indica se um jogador foi eliminado ou nao
-	int n_jogadores = 0;
+	static CtrlRegras r;
+	static String [] j_personagens; // array para conter nome dos personagens de cada jogador
+	static boolean [] j_estados; // array para conter a boolean que indica se um jogador foi eliminado ou nao
+	static int n_jogadores = 0;
+ 	static int turno = 0;
+ 	static int estado = 0; // controla situacao atual do jogo; 0 -> tela inicial, 1 -> tela de selecao de personagens, 2-> tela de jogo
+ 	
+ 	static TelaPersonagens tela_perso = null;
+	static TelaJogo tela_jogo = null;
+	static TelaInicial tela_ini = null;
 	
-	public Controller(int n_jogadores)
+	
+	public static void setConfig(int num_jogadores, ArrayList <String> personagens)
 	{
-		r = new Regras(n_jogadores);
-		this.n_jogadores = n_jogadores;
+		r = CtrlRegras.getCtrlRegras(n_jogadores, personagens);
+		n_jogadores = num_jogadores;
 		
 		j_personagens = new String[n_jogadores];
 		j_estados = new boolean[n_jogadores];
 		
+		// armazenam informacoes dos jogadores marcados na Tela de selecao de personagens
 		j_personagens = r.getNomeJogadores();
-		j_estados = r.getStatusJogadores();
+		j_estados = r.getStatusJogadores();	
 	}
-	
 	
 	// retorna nome do personagem do jogador que deveria jogar nesse turno
 	// o tipo de retorno talvez tenha que mudar quando formos implementar a gui
 	/* retorna o jogador da vez (ou o aviso de que o jogador foi eliminado) */
-	public String get_jogador_atual(int turno_atual)
+	public static String get_jogador_atual()
 	{
-		int id_j_atual = turno_atual % n_jogadores;
-
+		int id_j_atual = turno % n_jogadores;
+		
 		// se jogador pode jogar, retorna nome
 		// se foi eliminado por uma acusao errada, retorna aviso
 		return (!j_estados[id_j_atual]) ? j_personagens[id_j_atual] : "Jogador Eliminado"; 
 	}
 
 	/* seleciona um número randômico de 1 a 6 para indicar o valor do dado */
-	int roll_die()
+	public static int []roll_dice()
 	{
 		Random random = new Random();
-		    
-		return random.nextInt(1,7) + random.nextInt(1,7);
+		return new int[]{random.nextInt(1,7), random.nextInt(1,7)};  
 	}
 	
 	/* Jogador j faz uma acusação sobre os dados do assassinato. Se a acusação estiver correta, j vence o jogo, caso contrário é eliminado */
@@ -92,8 +98,59 @@ public class Controller
 	      }
 	    }
 
-	   
 	    // return value temporario, depende da interface
 	    return "Palpite nao foi refutado";
 	  }
+	
+	public static void prox_turno()
+	{
+		turno++;
+	}
+  
+	public static boolean [][] get_notas_jog_atual()
+	{
+		return r.get_notas_jog_atual();
+	}
+	
+	public static int [][] encontra_movimentos(int x, int y, int n_mov)
+	{	
+		return r.encontra_movimentos(x, y, n_mov);
+	}
+	
+	public static void main(String []args)
+	{
+		tela_ini = new TelaInicial();
+	}
+	
+	public static void update_estado(int novo)
+	{
+		estado = novo;
+		
+		switch (estado)
+		{
+			case 1:
+				if (tela_perso == null)
+				{
+					tela_perso = new TelaPersonagens();
+				}
+				break;
+			case 2:
+				if (tela_jogo == null)
+				{
+					tela_jogo = new TelaJogo();
+				}
+				break;
+			default:
+				if (tela_ini == null)
+				{
+					tela_ini = new TelaInicial();
+				}
+				break;
+		}
+	}
+	
+	public static void atualiza_cell_ocupada(int x, int y)
+	{
+		r.atualiza_cell_ocupada(x, y);
+	}
 }

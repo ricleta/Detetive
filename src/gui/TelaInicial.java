@@ -2,65 +2,72 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class TelaInicial extends JFrame implements ActionListener{
-  JButton criarJogo, continuarJogo;
-  int i;
+import controller.Controller;
 
-  Image img_ini;
-  JPanel p;
+public class TelaInicial extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-  public TelaInicial()
-  {
-    try 
-	  {
-		  img_ini = ImageIO.read(new File("images/capa.jpg"));
-	  } 
-	  catch(IOException e)
-	  {
-		 System.out.println(e.getMessage());
-		 System.exit(1);
-	  }
-    this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-    this.setVisible(true);
-    this.setLayout(null);
-    this.setSize(1200, 700);
-    
-    this.setTitle("Tela inicial");
+	JButton criarJogo, continuarJogo;
+	int i;
 
-    criarJogo = new JButton("Novo jogo");
-    continuarJogo = new JButton("Continuar jogo");
+	Image img_ini;
+	JPanel p;
 
-    criarJogo.setBounds(100,100,100,100); // mudar isso aqui 
-    criarJogo.addActionListener(this);
-    this.add(criarJogo);
-    
-    continuarJogo.setBounds(300,100,100,100); // mudar isso aqui 
-    continuarJogo.addActionListener(this);
-    this.add(continuarJogo);
-  }
+	public TelaInicial() {
+		try {
+			img_ini = ImageIO.read(new File("images/Backgrounds/capa.jpg"));
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
 
-  public void actionPerformed(ActionEvent e)
-  {
-    if(e.getSource() == criarJogo)
-    {
-      // System.out.println("Vai pra tela personagens");  
-      TelaPersonagens tela_perso = new TelaPersonagens();
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.setLayout(null);
+		this.setSize(1200, 700);
 
-      this.dispose();
-    }
-    else if(e.getSource() == continuarJogo)
-    {
-      System.out.println("Vai para jogo salvo");
-    }
-  }
+		this.setTitle("Tela inicial");
 
-  public void paint(Graphics g)
-	{
-		super.paint(g);
+		criarJogo = new JButton("Novo jogo");
+		continuarJogo = new JButton("Continuar jogo");
+
+		this.add(criarJogo);
+		criarJogo.addActionListener(this);
+		criarJogo.setBounds(100, 100, 100, 100);
 		
-		g.drawImage(img_tabuleiro, 1000, 1000, this);
+		this.add(continuarJogo);
+		continuarJogo.addActionListener(this);
+		continuarJogo.setBounds(300, 100, 100, 100);
+		
+		this.setVisible(true);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == criarJogo) 
+		{
+			Controller.update_estado(1);
+			this.dispose();
+		}
+//    else if(e.getSource() == continuarJogo)
+//    {	
+//      System.out.println("Vai para jogo salvo");
+//    }
+	}
+
+	public void paint(Graphics g) {
+		super.paint(g);
+
+		Graphics2D g2d = (Graphics2D) g;
+
+		g2d.drawImage(img_ini, 0, 0, this);
 	}
 
 }

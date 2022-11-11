@@ -1,7 +1,7 @@
 package regras;
 
 // classe publica apenas para testes deve ter visibilidade default
-public class Cell 
+class Cell 
 {
   private int x;
   private int y;
@@ -15,7 +15,7 @@ public class Cell
   private String jogador; // se celula ocupada, especifica qual jogador ocupa (atraves do personagem)
   String comodo_passagem; // se serve como passagem secreta, informa para qual comodo leva
 
-  public Cell(int x, int y, String comodo, int tipo)
+  Cell(int x, int y, String comodo, int tipo)
   {
     this.x = x;
     this.y = y;
@@ -44,13 +44,11 @@ public class Cell
     }
   }
 
-  // deve ser default
-  public int get_X(){
+  int get_X(){
     return x;
   }
   
-  // deve ser default
-  public int get_Y(){
+  int get_Y(){
     return y;
   }
   

@@ -1,10 +1,13 @@
 package gui;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
-class Notas extends JFrame /*implements ActionListener*/{
+class Notas extends JFrame {
+  /**
+	 * 
+	 */
+  private static final long serialVersionUID = 1L;
+
   JCheckBox[] suspeitos = new JCheckBox[6];
   JCheckBox[] armas = new JCheckBox[6];
   JCheckBox[] comodos = new JCheckBox[9];
@@ -13,7 +16,8 @@ class Notas extends JFrame /*implements ActionListener*/{
   JLabel labelComodos = new JLabel("Comodos");
   int i;
 
-  Notas(){ // passar o jogador sla ?
+  /* construtor recebe 3 vetores de booleanos indicando quais checkboxes já devem iniciar marcadas */
+  Notas(boolean[] notas, boolean[] notas2, boolean[] notas3){ 
     this.setVisible(true);
     this.setLayout(null);
     this.setTitle("Minhas notas");
@@ -47,26 +51,44 @@ class Notas extends JFrame /*implements ActionListener*/{
     comodos[4] = new JCheckBox("Jardim de Inverno");
     comodos[5] = new JCheckBox("Sala de Estar"); 
     comodos[6] = new JCheckBox("Sala de Jantar");     
-    comodos[7] = new JCheckBox("Sala de Musica"); 
-    comodos[8] = new JCheckBox("Salao de Jogos"); 
+    comodos[7] = new JCheckBox("Sala de Jogos"); 
+    comodos[8] = new JCheckBox("Sala de Musica"); 
 
     for(i = 0; i < 6; i++){
       this.add(suspeitos[i]);
       suspeitos[i].setBounds(5, 30+i*40, 140, 35);
+      suspeitos[i].setSelected(notas[i]);
+      suspeitos[i].setEnabled(false);
+
       this.add(armas[i]);
       armas[i].setBounds(150, 30+i*40, 140, 35);
+      armas[i].setSelected(notas2[i]);
+      armas[i].setEnabled(false);
+      
       this.add(comodos[i]);
       comodos[i].setBounds(295, 30+i*40, 160, 35);
+      comodos[i].setSelected(notas3[i]);
+      comodos[i].setEnabled(false);
     }
     
     for(i = 6; i < 9; i++){
       this.add(comodos[i]);
       comodos[i].setBounds(295, 30+i*40, 160, 35);
+      comodos[i].setSelected(notas3[i]);
+      comodos[i].setEnabled(false);
     }
     
   }
 
-  // public void actionPerformed(ActionEvent e){
-    
+  // void checks(Boolean checked_suspeitos[], Boolean checked_armas[], Boolean checked_comodos[]){
+  //   for(i = 0; i < 6; i++){
+  //     checked_suspeitos[i] = suspeitos[i].isSelected();
+  //     checked_armas[i] = armas[i].isSelected();
+  //     checked_comodos[i] = comodos[i].isSelected();
+  //   }
+
+  //   for(i = 6; i < 9; i++){
+  //     checked_comodos[i] = comodos[i].isSelected();
+  //   }
   // }
 }
