@@ -20,7 +20,6 @@ public class TelaInicial extends JFrame implements ActionListener {
 	int i;
 
 	Image img_ini;
-	JPanel p;
 
 	public TelaInicial() {
 		try {
@@ -30,7 +29,7 @@ public class TelaInicial extends JFrame implements ActionListener {
 			System.exit(1);
 		}
 
-		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(null);
 		this.setSize(1200, 700);
 
@@ -41,11 +40,11 @@ public class TelaInicial extends JFrame implements ActionListener {
 
 		this.add(criarJogo);
 		criarJogo.addActionListener(this);
-		criarJogo.setBounds(100, 100, 100, 100);
+		criarJogo.setBounds(100, 300, 150, 100);
 		
 		this.add(continuarJogo);
 		continuarJogo.addActionListener(this);
-		continuarJogo.setBounds(300, 100, 100, 100);
+		continuarJogo.setBounds(300, 300, 150, 100);
 		
 		this.setVisible(true);
 	}
@@ -67,7 +66,7 @@ public class TelaInicial extends JFrame implements ActionListener {
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		g2d.drawImage(img_ini, 0, 0, this);
+		g2d.drawImage(img_ini, 0, 20, 1200, 680, this);
 		
 		criarJogo.repaint();
 		continuarJogo.repaint();

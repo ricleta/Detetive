@@ -5,11 +5,11 @@ import java.util.*;
 class Regras
 {
       /**** atributos ****/
-	  private String suspeitos[] = {"Srta. Scarlet", "Coronel Mustard", "Professor Plum", "Reverendo Green", "Sra. White", "Sra. Peacock"};
+	  String suspeitos[] = {"Srta. Scarlet", "Coronel Mustard", "Professor Plum", "Reverendo Green", "Sra. White", "Sra. Peacock"};
 
-	  private String armas[] = {"Corda", "Cano de Chumbo", "Faca", "Chave Inglesa", "Castical", "Revolver"}; 
+	  String armas[] = {"Corda", "Cano de Chumbo", "Faca", "Chave Inglesa", "Castical", "Revolver"}; 
 
-	  private String comodos[] = {"Biblioteca", "Cozinha", "Entrada", "Escritorio", "Jardim de Inverno", "Sala de Estar", "Sala de Jantar", "Sala de Musica", "Salao de Jogos"};
+	  String comodos[] = {"Biblioteca", "Cozinha", "Entrada", "Escritorio", "Jardim de Inverno", "Sala de Estar", "Sala de Jantar", "Sala de Musica", "Salao de Jogos"};
 
 	  // 0 -> suspeito, 1 -> arma, 2-> comodo
 	  protected String envelope[] = new String[3];
@@ -111,10 +111,10 @@ class Regras
 	  }
 	  
 	//usado para testar embaralhador, por cartas ser private 
-	  ArrayList <String> get_cartas()
-	  {
-		  return cartas;
-	  }
+//	  ArrayList <String> get_cartas()
+//	  {
+//		  return cartas;
+//	  }
 
 	  /* método para distribuir as 18 cartas entre N jogadores */
 	  public void distribui()

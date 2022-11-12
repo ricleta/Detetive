@@ -22,6 +22,7 @@ class PalpiteAcusacao extends JFrame implements ActionListener {
 
 	/* construtor recebe uma String que indica se será Palpite ou Acusação */
 	PalpiteAcusacao(String tipo) {
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 		this.pack();
 		this.setLayout(new FlowLayout());

@@ -12,9 +12,9 @@ class Jogador
   private Color cor;
   private ArrayList <String> cartas = new ArrayList<String>();  
   private boolean eliminado;
-  Boolean[] checked_suspeitos = new Boolean[6]; 
-  Boolean[] checked_armas = new Boolean[6];
-  Boolean[] checked_comodos = new Boolean[9];
+  boolean[] checked_suspeitos = new boolean[6]; 
+  boolean[] checked_armas = new boolean[6];
+  boolean[] checked_comodos = new boolean[9];
 
   /**** construtor e métodos ****/
   // Selecao de nome feita de uma lista na gui, não pode ser inválida

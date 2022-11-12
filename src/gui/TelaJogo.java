@@ -5,13 +5,17 @@ import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.ListIterator;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import controller.Controller;
+import regras.ObservadoIF;
+import regras.ObservadorIF;
 
-public class TelaJogo extends JFrame implements ActionListener, MouseListener 
-{
+public class TelaJogo extends JFrame implements ActionListener, MouseListener, ObservadoIF {
 	private static final long serialVersionUID = 1L;
 
 	/* Constantes */
@@ -30,7 +34,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 	JPanel p;
 	JLabel jog_vez;
 	JLabel joga_dado;
-	
+
 	JButton passagemSecreta = new JButton("Passagem Secreta");
 	JButton proximo = new JButton("Proximo");
 	JButton show_cards = new JButton("Mostrar cartas");
@@ -39,12 +43,20 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 	JButton acusar = new JButton("Acusar");
 	JButton save_game = new JButton("Salvar jogo");
 	JButton dado = new JButton("Jogar Dados");
+	
+	// lista de observadores
+	ArrayList <ObservadorIF> observadores = new ArrayList <ObservadorIF>();
 
-	boolean flag_end = false; // flag para indicar se o jogador vai poder finalizar a jogada e passar para o próximo jogador ou salvar o jogo
 	String jog_atual = "Srta. Scarlet";
-	int [][] coord_possiveis;
+	int[][] coord_possiveis;
 	int[] dados;
 	int id_jog;
+
+	JComboBox<Integer> aux_dado1;
+	JComboBox<Integer> aux_dado2;
+
+	Integer[] valores_dado = new Integer[] { 1, 2, 3, 4, 5, 6 };
+	JButton movimentar = new JButton("Movimentar");
 
 	public TelaJogo() {
 		try {
@@ -57,7 +69,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 			System.exit(1);
 		}
 
-		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(null);
 		this.setSize(1200, 700);
 		this.setTitle("Jogo");
@@ -73,12 +85,11 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 		this.add(passagemSecreta);
 		passagemSecreta.setBounds(1020, 100, 150, 50);
 		passagemSecreta.addActionListener(this);
-	    passagemSecreta.setEnabled(false);
+		passagemSecreta.setEnabled(false);
 
 		this.add(proximo);
 		proximo.setBounds(1020, 150, 150, 50);
 		proximo.addActionListener(this);
-//		proximo.setEnabled(flag_end);
 		proximo.setEnabled(false); // so fica enabled no fim da jogada
 
 		this.add(show_cards);
@@ -100,7 +111,6 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 		this.add(save_game);
 		save_game.setBounds(1020, 450, 150, 50);
 		save_game.addActionListener(this);
-//	    save_game.setEnabled(flag_end);
 		save_game.setEnabled(false); // so fica enabled no fim da jogada
 
 		this.add(dado);
@@ -110,6 +120,16 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 		ini_coord_jogadores();
 		this.setVisible(true);
 		this.addMouseListener(this);
+
+		aux_dado1 = new JComboBox<Integer>(valores_dado);
+		aux_dado1.setBounds(850, 20, 50, 50);
+		this.add(aux_dado1);
+		aux_dado2 = new JComboBox<Integer>(valores_dado);
+		aux_dado2.setBounds(910, 20, 50, 50);
+		this.add(aux_dado2);
+		movimentar.setBounds(850, 80, 110, 50);
+		movimentar.addActionListener(this);
+		this.add(movimentar);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -123,14 +143,17 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 			jog_vez = new JLabel("Vez de: " + jog_atual);
 			this.add(jog_vez);
 			jog_vez.setBounds(1020, 20, 180, 50);
-			
+
 			dado.setEnabled(true);
+			movimentar.setEnabled(true);
 			proximo.setEnabled(false);
 		} else if (e.getSource() == show_cards) {
+			ArrayList<String> player_cards = Controller.get_cartas_jog_atual();
 
+			CartasMostradas myCards = new CartasMostradas(player_cards);
 		} else if (e.getSource() == notepad) {
-			boolean [][] notas = Controller.get_notas_jog_atual();
-			
+			boolean[][] notas = Controller.get_notas_jog_atual();
+
 			// Nao mostra os marcados ainda, falta implementar metodo da CtrlRegras
 			@SuppressWarnings("unused")
 			Notas bloco = new Notas(notas[0], notas[1], notas[2]);
@@ -145,9 +168,10 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 		} else if (e.getSource() == dado) {
 			dados = Controller.roll_dice();
 			id_jog = get_id_jog();
-			
+
+			movimentar.setEnabled(false);
 			dado.setEnabled(false);
-			
+
 			this.remove(joga_dado);
 			joga_dado = new JLabel(String.format("%d Passo(s)", dados[0] + dados[1]));
 			this.add(joga_dado);
@@ -160,9 +184,35 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 				System.out.println(ex.getMessage());
 				System.exit(1);
 			}
+
+			atualiza();
 			
-			// provavelmente vai sair devido observer
-			coord_possiveis = Controller.encontra_movimentos(coord_multiplier[id_jog][0], coord_multiplier[id_jog][1], dados[0] + dados[1]);
+			repaint();
+		} else if (e.getSource() == movimentar) {
+			dados = new int[2];
+			
+			dados[0] = (int) (aux_dado1.getSelectedItem());
+			dados[1] = (int) (aux_dado2.getSelectedItem());
+
+			id_jog = get_id_jog();
+
+			movimentar.setEnabled(false);
+			dado.setEnabled(false);
+
+			this.remove(joga_dado);
+			joga_dado = new JLabel(String.format("%d Passo(s)", dados[0] + dados[1]));
+			this.add(joga_dado);
+			joga_dado.setBounds(1020, 510, 100, 20);
+
+			try {
+				img_dado1 = ImageIO.read(new File(String.format("images/Tabuleiros/dado%d.jpg", dados[0])));
+				img_dado2 = ImageIO.read(new File(String.format("images/Tabuleiros/dado%d.jpg", dados[1])));
+			} catch (IOException ex) {
+				System.out.println(ex.getMessage());
+				System.exit(1);
+			}
+
+			atualiza();
 
 			repaint();
 		}
@@ -185,45 +235,50 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 
 //			System.out.printf("%s: x = %d\ty = %d\t n_mov = %d\n", jog_atual, coord_multiplier[id_jog][0], coord_multiplier[id_jog][1], dados[0] + dados[1]);
 			muda_pos_jog(x_cell, y_cell);
-			
+
 			// so muda aqui se jogador nao entrar num comodo
 			proximo.setEnabled(true);
-			
+
+			this.remove(joga_dado);
+			joga_dado = new JLabel("0 Passos");
+			joga_dado.setBounds(1020, 510, 100, 20);
+			this.add(joga_dado);
+
 			repaint();
 		}
 	}
-	
-	boolean checa_coord_valida(int x, int y)
-	{
-	
-		if ((x >= 0 && x <= 23) && (y >= 0 && y <= 24) && coord_possiveis != null)
-		{
-			for (int [] i :coord_possiveis)
-			{
-				if (x == i[0] && y ==i[1])
-				{
+
+	boolean checa_coord_valida(int x, int y) {
+
+		if ((x >= 0 && x <= 23) && (y >= 0 && y <= 24) && coord_possiveis != null) {
+			for (int[] i : coord_possiveis) {
+				if (x == i[0] && y == i[1]) {
 					coord_possiveis = null;
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
 	void muda_pos_jog(int x, int y) 
 	{
 		int id = get_id_jog();
-		
+
 		coord_multiplier[id][0] = x;
 		coord_multiplier[id][1] = y;
-		
+
+//		int [] aux = Controller.atualiza_pos_jog(x, y, jog_atual);
+//		
+//		coord_multiplier[id][0] = aux[0];
+//		coord_multiplier[id][1] = aux[1];
+
 		// provavelmente vai sair devido observer
 		Controller.atualiza_cell_ocupada(x, y);
 	}
 
-	int get_id_jog() 
-	{
+	int get_id_jog() {
 		switch (jog_atual) {
 		case "Srta. Scarlet":
 			return 0;
@@ -236,12 +291,12 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 		case "Sra. White":
 			return 4;
 		case "Sra. Peacock":
-			return 5;	
+			return 5;
 		default:
 			return -1;
 		}
 	}
-	
+
 	/* Falsa implementação necessária devido à interface MouseListener */
 	public void mousePressed(java.awt.event.MouseEvent e) {
 	}
@@ -315,15 +370,53 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener
 				start_Y + coord_multiplier[5][1] * step_Y, diametro, diametro);
 		g2d.setPaint(new Color(2, 80, 163));
 		g2d.fill(peacock);
-		
-		if (coord_possiveis != null)
-		{
+
+		if (coord_possiveis != null) {
 			g2d.setPaint(Color.ORANGE);
-			
-			for (int [] i: coord_possiveis)
-			{
+
+			for (int[] i : coord_possiveis) {
 				g2d.fillRect(start_X + i[0] * step_X, start_Y + i[1] * step_Y, 17, 17);
 			}
 		}
 	}
+
+	@Override
+	public void add(ObservadorIF observador) 
+	{
+		observadores.add(observador);
+	}
+
+	@Override
+	public void remove(ObservadorIF observador) 
+	{
+		observadores.remove(observador);
+	}
+	
+	@Override
+	public int [][] get()
+	{
+		int [][] aux = new int [2][2];
+		int id = get_id_jog();
+		
+		aux[0] = dados;
+		
+		aux[1][0] = coord_multiplier[id][0];
+		aux[1][1] = coord_multiplier[id][1];
+
+		return aux;
+	}
+	
+	public void set_coord_possiveis(int [][] coords)
+	{
+		coord_possiveis = coords;
+	}
+	
+	public void atualiza()
+	{	
+		for (ObservadorIF o: observadores) 
+		{
+			o.notify_dado_jogado(this);
+		}
+	}
+
 }
