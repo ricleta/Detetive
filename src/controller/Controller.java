@@ -141,11 +141,6 @@ public class Controller {
 		r.atualiza_cell_ocupada(x, y);
 	}
 	
-	public static int [] atualiza_pos_jog(int x, int y, String jog)
-	{
-		return r.atualiza_pos_jog(x, y, jog);
-	}
-	
 	
 	public static void registra(ObservadorIF o)
 	{

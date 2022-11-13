@@ -22,18 +22,16 @@ public class TelaPersonagens extends JFrame implements ActionListener {
 	int i;
 	int n_jogadores = 0;
 
-	Image img_personagens;
+  Image img_personagens;
 
-	public TelaPersonagens() 
-	{
-		try {
-			img_personagens = ImageIO.read(new File("images/Backgrounds/EscolhaPersonagens.jpg"));
+	public TelaPersonagens() {
+    try {
+			img_personagens = ImageIO.read(new File("images/Backgrounds/capa.jpg"));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
-		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
 		this.setSize(1200, 700);
 		this.setLayout(null);
 		this.setTitle("Selecione os personagens do jogo");
@@ -42,15 +40,17 @@ public class TelaPersonagens extends JFrame implements ActionListener {
 		boxes[0] = new JCheckBox("Srta. Scarlet");
 		boxes[0].setBackground(Color.RED);
 		boxes[1] = new JCheckBox("Coronel Mustard");
-		boxes[1].setBackground(Color.YELLOW);
+		boxes[1].setBackground(Color.YELLOW);		
 		boxes[2] = new JCheckBox("Professor Plum");
 		boxes[2].setBackground(new Color(97, 17, 68));
+		boxes[2].setForeground(Color.WHITE);
 		boxes[3] = new JCheckBox("Reverendo Green");
 		boxes[3].setBackground(Color.GREEN);
 		boxes[4] = new JCheckBox("Sra. White");
 		boxes[4].setBackground(Color.LIGHT_GRAY);
 		boxes[5] = new JCheckBox("Sra. Peacock");
 		boxes[5].setBackground(Color.BLUE);
+		boxes[5].setForeground(Color.WHITE);
 
 		for (i = 0; i < 6; i++) {
 			this.add(boxes[i]);
@@ -68,7 +68,8 @@ public class TelaPersonagens extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == iniciarJogo) {
-			if (this.checkJogValidos() != -1) {
+			if (this.checkJogValidos() != -1) 
+			{
 				Controller.setConfig(n_jogadores, jog_selecionados);
 				this.dispose();
 			}
@@ -97,17 +98,17 @@ public class TelaPersonagens extends JFrame implements ActionListener {
 		}
 	}
 
-	public void paint(Graphics g) {
+  public void paint(Graphics g) {
 		super.paint(g);
 
 		Graphics2D g2d = (Graphics2D) g;
 
 		g2d.drawImage(img_personagens, 0, 20, 1200, 680, this);
-
-		for (JCheckBox box : boxes) {
+		
+		for(JCheckBox box: boxes) {
 			box.repaint();
 		}
-
+		
 		iniciarJogo.repaint();
 	}
 }

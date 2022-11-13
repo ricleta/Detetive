@@ -51,6 +51,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 	int[][] coord_possiveis;
 	int[] dados;
 	int id_jog;
+	boolean ja_moveu_jog = false;
 
 	JComboBox<Integer> aux_dado1;
 	JComboBox<Integer> aux_dado2;
@@ -144,6 +145,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 			this.add(jog_vez);
 			jog_vez.setBounds(1020, 20, 180, 50);
 
+			ja_moveu_jog = false;
 			dado.setEnabled(true);
 			movimentar.setEnabled(true);
 			proximo.setEnabled(false);
@@ -185,7 +187,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 				System.exit(1);
 			}
 
-			atualiza();
+			atualiza_dado();
 			
 			repaint();
 		} else if (e.getSource() == movimentar) {
@@ -212,7 +214,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 				System.exit(1);
 			}
 
-			atualiza();
+			atualiza_dado();
 
 			repaint();
 		}
@@ -262,20 +264,18 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 		return false;
 	}
 
-	void muda_pos_jog(int x, int y) 
+	public void muda_pos_jog(int x, int y) 
 	{
 		int id = get_id_jog();
 
 		coord_multiplier[id][0] = x;
 		coord_multiplier[id][1] = y;
 
-//		int [] aux = Controller.atualiza_pos_jog(x, y, jog_atual);
-//		
-//		coord_multiplier[id][0] = aux[0];
-//		coord_multiplier[id][1] = aux[1];
-
-		// provavelmente vai sair devido observer
-		Controller.atualiza_cell_ocupada(x, y);
+		if (!ja_moveu_jog)
+		{
+			ja_moveu_jog = true;
+			atualiza_movimento();
+		}
 	}
 
 	int get_id_jog() {
@@ -393,29 +393,41 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 	}
 	
 	@Override
-	public int [][] get()
+	public int [] get_pos_token()
 	{
-		int [][] aux = new int [2][2];
+		int [] aux = new int [2];
 		int id = get_id_jog();
 		
-		aux[0] = dados;
-		
-		aux[1][0] = coord_multiplier[id][0];
-		aux[1][1] = coord_multiplier[id][1];
+		aux[0] = coord_multiplier[id][0];
+		aux[1] = coord_multiplier[id][1];
 
 		return aux;
 	}
-	
+
+	@Override
+	public int [] get_valor_dados()
+	{
+		return dados;
+	}
+
 	public void set_coord_possiveis(int [][] coords)
 	{
 		coord_possiveis = coords;
 	}
 	
-	public void atualiza()
+	private void atualiza_dado()
 	{	
 		for (ObservadorIF o: observadores) 
 		{
 			o.notify_dado_jogado(this);
+		}
+	}
+	
+	private void atualiza_movimento()
+	{
+		for (ObservadorIF o: observadores) 
+		{
+			o.notify_jogador_moveu(this);
 		}
 	}
 

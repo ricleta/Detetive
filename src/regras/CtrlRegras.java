@@ -137,31 +137,40 @@ public class CtrlRegras implements ObservadorIF {
 	@Override
 	public void notify_dado_jogado(ObservadoIF ob) 
 	{
-		int aux [][] = ob.get();
+		int [] coord_token = ob.get_pos_token();
+		int [] dados = ob.get_valor_dados();
 		
 		get_jog_atual();
 		
-		jog_atual.setX(aux[1][0]);
-		jog_atual.setY(aux[1][1]);
+		jog_atual.setX(coord_token[0]);
+		jog_atual.setY(coord_token[1]);
 		
-		
-		ob.set_coord_possiveis(encontra_movimentos(jog_atual.getX(), jog_atual.getY(), aux[0][0] + aux[0][1]));
+		ob.set_coord_possiveis(encontra_movimentos(jog_atual.getX(), jog_atual.getY(), dados[0] + dados[1]));
 	}
 	
 	@Override
 	public void notify_jogador_moveu(ObservadoIF ob)
 	{
+		int [] coord_token = ob.get_pos_token();	
 		
-	}
-
-	public int[] atualiza_pos_jog(int x, int y, String personagem) 
-	{
-		Cell atual = t.tab[y][x];
-
-		if (atual.get_estado() == 1 && atual.get_comodo() != null) {
-			return m.entra_comodo(atual, personagem);
+		Cell atual = t.tab[coord_token[1]][coord_token[0]];
+		
+		if (atual.get_estado() == 2)
+		{
+			coord_token = m.entra_comodo(atual, jog_atual.getPersonagem());
+			
+			jog_atual.setX(coord_token[0]);
+			jog_atual.setY(coord_token[1]);
+			
+			ob.muda_pos_jog(jog_atual.getX(), jog_atual.getY());
+			return;
 		}
-
-		return new int[] { x, y };
+		
+		jog_atual.setX(coord_token[0]);
+		jog_atual.setY(coord_token[1]);
+		
+		ob.muda_pos_jog(jog_atual.getX(), jog_atual.getY());
+		
+		Controller.atualiza_cell_ocupada(coord_token[0], coord_token[1]);
 	}
 }
