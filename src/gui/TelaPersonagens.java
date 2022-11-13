@@ -26,7 +26,7 @@ public class TelaPersonagens extends JFrame implements ActionListener {
 
 	public TelaPersonagens() {
     try {
-			img_personagens = ImageIO.read(new File("images/Backgrounds/capa.jpg"));
+			img_personagens = ImageIO.read(new File("images/Backgrounds/EscolhaPersonagens.jpg"));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			System.exit(1);

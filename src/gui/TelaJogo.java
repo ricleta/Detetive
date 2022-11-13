@@ -135,7 +135,12 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == passagemSecreta) {
+			this.atualiza_passagem_secreta();
 
+			dado.setEnabled(false);
+			movimentar.setEnabled(false);
+			proximo.setEnabled(true);
+			repaint();
 		} else if (e.getSource() == proximo) {
 			Controller.prox_turno();
 			jog_atual = Controller.get_jogador_atual();
@@ -149,6 +154,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 			dado.setEnabled(true);
 			movimentar.setEnabled(true);
 			proximo.setEnabled(false);
+//			passagemSecreta.setEnabled(false);
 		} else if (e.getSource() == show_cards) {
 			ArrayList<String> player_cards = Controller.get_cartas_jog_atual();
 
@@ -156,7 +162,6 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 		} else if (e.getSource() == notepad) {
 			boolean[][] notas = Controller.get_notas_jog_atual();
 
-			// Nao mostra os marcados ainda, falta implementar metodo da CtrlRegras
 			@SuppressWarnings("unused")
 			Notas bloco = new Notas(notas[0], notas[1], notas[2]);
 		} else if (e.getSource() == palpite) {
@@ -173,6 +178,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 
 			movimentar.setEnabled(false);
 			dado.setEnabled(false);
+			passagemSecreta.setEnabled(false);
 
 			this.remove(joga_dado);
 			joga_dado = new JLabel(String.format("%d Passo(s)", dados[0] + dados[1]));
@@ -415,6 +421,12 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 		coord_possiveis = coords;
 	}
 	
+	@Override
+	public void habilita_passagem(boolean habilitar)
+	{
+		passagemSecreta.setEnabled(habilitar);
+	}
+	
 	private void atualiza_dado()
 	{	
 		for (ObservadorIF o: observadores) 
@@ -430,5 +442,12 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 			o.notify_jogador_moveu(this);
 		}
 	}
-
+	
+	private void atualiza_passagem_secreta()
+	{
+		for (ObservadorIF o: observadores) 
+		{
+			o.notify_usou_passagem(this);
+		}
+	}
 }

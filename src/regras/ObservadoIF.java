@@ -13,4 +13,6 @@ public interface ObservadoIF
 	public void muda_pos_jog(int x, int y);
 	
 	public void set_coord_possiveis(int [][] coords);
+	
+	public void habilita_passagem(boolean habilitar);
 }

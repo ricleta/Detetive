@@ -18,7 +18,8 @@ class Movimento {
 	ArrayList<Cell> encontra_mov(ArrayList<Cell> origens, int n_mov) {
 //		System.out.println("n_mov = " + n_mov);
 
-		if (n_mov == 0) {
+		if (n_mov == 0) 
+		{
 			return origens;
 		}
 
@@ -47,6 +48,11 @@ class Movimento {
 		}
 
 		return encontra_mov(origens, n_mov - 1);
+	}
+	
+	void reset_visitados()
+	{
+		visitados = new ArrayList<Cell>();
 	}
 
 	ArrayList<Cell> verifica_tipo_0(int x_atual, int y_atual) {
@@ -145,8 +151,7 @@ class Movimento {
 		return resultado;
 	}
 
-	int[] entra_comodo(Cell atual, String personagem) {
-		String comodo = atual.get_comodo();
+	int[] entra_comodo(String comodo_atual, String personagem) {
 		int baixo = 0; 
 		int direita = 0; 
 		int x = 0;
@@ -182,7 +187,7 @@ class Movimento {
 			return null;
 		}
 
-		switch (comodo) {
+		switch (comodo_atual) {
 		case "Biblioteca":
 			x = 19;
 			y = 15;

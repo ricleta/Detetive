@@ -54,8 +54,16 @@ public class CtrlRegras implements ObservadorIF {
 		int[][] coord_possiveis;
 
 		Cell atual = t.tab[y][x];
+		
+		atual.set_estado(0);
 
-		cells.add(atual);
+		if (atual.get_comodo() != null) {
+			cells.addAll(get_portas(atual.get_comodo()));
+		} else {
+			cells.add(atual);
+		}
+
+		m.reset_visitados();
 		cells = m.encontra_mov(cells, n_mov);
 
 		coord_possiveis = new int[cells.size()][2];
@@ -68,10 +76,94 @@ public class CtrlRegras implements ObservadorIF {
 		return coord_possiveis;
 	}
 
-	private void get_jog_atual()
-	{
+	ArrayList<Cell> get_portas(String comodo) {
+		ArrayList<Cell> portas = new ArrayList<Cell>();
+
+		switch (comodo) {
+		case "Biblioteca":
+			portas.add(t.tab[16][16]);
+			portas.add(t.tab[13][20]);
+
+			break;
+
+		case "Cozinha":
+			portas.add(t.tab[7][4]);
+
+			break;
+
+		case "Entrada":
+			portas.add(t.tab[17][11]);
+			portas.add(t.tab[17][12]);
+			portas.add(t.tab[20][15]);
+
+			break;
+
+		case "Escritorio":
+			portas.add(t.tab[20][17]);
+
+			break;
+
+		case "Jardim de Inverno":
+			portas.add(t.tab[5][18]);
+
+			break;
+
+		case "Sala de Estar":
+			portas.add(t.tab[18][6]);
+
+			break;
+
+		case "Sala de Jantar":
+			portas.add(t.tab[12][8]);
+			portas.add(t.tab[16][6]);
+
+			break;
+
+		case "Sala de Musica":
+			portas.add(t.tab[5][7]);
+			portas.add(t.tab[8][9]);
+			portas.add(t.tab[5][16]);
+			portas.add(t.tab[8][14]);
+
+			break;
+
+		case "Salao de Jogos":
+			portas.add(t.tab[9][17]);
+			portas.add(t.tab[13][22]);
+
+			break;
+
+		default:
+			return null;
+		}
+
+		return portas;
+	}
+
+	public int[] usa_passagem_secreta() {
+		get_jog_atual();
+
+		Cell atual = t.tab[jog_atual.getY()][jog_atual.getX()];
+		String comodo_pass = atual.get_passagem();
+
+		int[] coord_token;
+
+		if (comodo_pass != null) 
+		{	
+			coord_token = m.entra_comodo(comodo_pass, jog_atual.getPersonagem());
+
+			jog_atual.setX(coord_token[0]);
+			jog_atual.setY(coord_token[1]);
+
+			return coord_token;
+		}
+
+		return null;
+	}
+
+	private void get_jog_atual() {
 		String personagem = Controller.get_jogador_atual();
-		
+
 		for (Jogador j : r.jogadores) {
 			if (j.getPersonagem().equals(personagem)) {
 				jog_atual = j;
@@ -79,14 +171,13 @@ public class CtrlRegras implements ObservadorIF {
 			}
 		}
 	}
-	
-	public boolean[][] get_notas_jog_atual() 
-	{
+
+	public boolean[][] get_notas_jog_atual() {
 		int i;
 
 		/* iterar pela lista até achar o jogador atual para poder retornar suas notas */
 		get_jog_atual();
-		
+
 		for (String carta : jog_atual.get_cartas()) {
 			for (i = 0; i < 6; i++) {
 				if (carta.equals(r.suspeitos[i])) {
@@ -135,42 +226,66 @@ public class CtrlRegras implements ObservadorIF {
 	}
 
 	@Override
-	public void notify_dado_jogado(ObservadoIF ob) 
-	{
-		int [] coord_token = ob.get_pos_token();
-		int [] dados = ob.get_valor_dados();
-		
+	public void notify_dado_jogado(ObservadoIF ob) {
+		int[] coord_token = ob.get_pos_token();
+		int[] dados = ob.get_valor_dados();
+
 		get_jog_atual();
-		
+
 		jog_atual.setX(coord_token[0]);
 		jog_atual.setY(coord_token[1]);
-		
+
 		ob.set_coord_possiveis(encontra_movimentos(jog_atual.getX(), jog_atual.getY(), dados[0] + dados[1]));
 	}
-	
+
 	@Override
-	public void notify_jogador_moveu(ObservadoIF ob)
-	{
-		int [] coord_token = ob.get_pos_token();	
-		
+	public void notify_jogador_moveu(ObservadoIF ob) {
+		int[] coord_token = ob.get_pos_token();
+
 		Cell atual = t.tab[coord_token[1]][coord_token[0]];
-		
-		if (atual.get_estado() == 2)
-		{
-			coord_token = m.entra_comodo(atual, jog_atual.getPersonagem());
-			
+
+		if (atual.get_estado() == 2) {
+			coord_token = m.entra_comodo(atual.get_comodo(), jog_atual.getPersonagem());
+
 			jog_atual.setX(coord_token[0]);
 			jog_atual.setY(coord_token[1]);
-			
+
 			ob.muda_pos_jog(jog_atual.getX(), jog_atual.getY());
+			
+//			if (t.tab[jog_atual.getY()][jog_atual.getX()].get_passagem() != null)
+//			{
+//				ob.habilita_passagem(true);
+//			}
+
 			return;
 		}
-		
+
 		jog_atual.setX(coord_token[0]);
 		jog_atual.setY(coord_token[1]);
-		
+
 		ob.muda_pos_jog(jog_atual.getX(), jog_atual.getY());
 		
 		Controller.atualiza_cell_ocupada(coord_token[0], coord_token[1]);
+	}
+
+	@Override
+	public void notify_usou_passagem(ObservadoIF ob) 
+	{
+		int [] coord_token = usa_passagem_secreta();	
+	
+		ob.habilita_passagem(false);
+		ob.muda_pos_jog(coord_token[0], coord_token[1]);
+	}
+	
+	public boolean pode_usar_passagem()
+	{
+		get_jog_atual();
+		
+		if (t.tab[jog_atual.getY()][jog_atual.getX()].get_passagem() != null)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 }

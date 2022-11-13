@@ -98,8 +98,18 @@ public class Controller {
 		return "Palpite nao foi refutado";
 	}
 
-	public static void prox_turno() {
+	public static void prox_turno() 
+	{
 		turno++;
+		
+		if (r.pode_usar_passagem())
+		{
+			tela_jogo.habilita_passagem(true);
+		}
+		else
+		{
+			tela_jogo.habilita_passagem(false);
+		}
 	}
 
 	public static boolean[][] get_notas_jog_atual() {
