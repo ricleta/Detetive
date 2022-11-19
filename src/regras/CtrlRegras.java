@@ -11,7 +11,7 @@ public class CtrlRegras implements ObservadorIF {
 	Movimento m;
 	Jogador jog_atual;
 
-	private CtrlRegras(int n_jogadores, ArrayList<String> personagens) {
+	protected CtrlRegras(int n_jogadores, ArrayList<String> personagens) {
 		r = new Regras(n_jogadores, personagens);
 		t = new Tabuleiro();
 		m = new Movimento(t.tab);
@@ -54,7 +54,7 @@ public class CtrlRegras implements ObservadorIF {
 		int[][] coord_possiveis;
 
 		Cell atual = t.tab[y][x];
-		
+
 		atual.set_estado(0);
 
 		if (atual.get_comodo() != null) {
@@ -148,8 +148,7 @@ public class CtrlRegras implements ObservadorIF {
 
 		int[] coord_token;
 
-		if (comodo_pass != null) 
-		{	
+		if (comodo_pass != null) {
 			coord_token = m.entra_comodo(comodo_pass, jog_atual.getPersonagem());
 
 			jog_atual.setX(coord_token[0]);
@@ -251,11 +250,6 @@ public class CtrlRegras implements ObservadorIF {
 			jog_atual.setY(coord_token[1]);
 
 			ob.muda_pos_jog(jog_atual.getX(), jog_atual.getY());
-			
-//			if (t.tab[jog_atual.getY()][jog_atual.getX()].get_passagem() != null)
-//			{
-//				ob.habilita_passagem(true);
-//			}
 
 			return;
 		}
@@ -264,28 +258,58 @@ public class CtrlRegras implements ObservadorIF {
 		jog_atual.setY(coord_token[1]);
 
 		ob.muda_pos_jog(jog_atual.getX(), jog_atual.getY());
-		
+
 		Controller.atualiza_cell_ocupada(coord_token[0], coord_token[1]);
 	}
 
 	@Override
-	public void notify_usou_passagem(ObservadoIF ob) 
-	{
-		int [] coord_token = usa_passagem_secreta();	
-	
+	public void notify_usou_passagem(ObservadoIF ob) {
+		int[] coord_token = usa_passagem_secreta();
+
 		ob.habilita_passagem(false);
 		ob.muda_pos_jog(coord_token[0], coord_token[1]);
 	}
-	
-	public boolean pode_usar_passagem()
-	{
+
+	@Override
+	public void notify_fez_palpite(ObservadoIF ob) {
+		atualiza_notas_jog(ob.get_result_palpite());
+	}
+
+	private void atualiza_notas_jog(String carta_palpite) {
+		int i;
+
+		/* iterar pela lista até achar o jogador atual para poder retornar suas notas */
 		get_jog_atual();
-		
-		if (t.tab[jog_atual.getY()][jog_atual.getX()].get_passagem() != null)
-		{
+
+		for (i = 0; i < 6; i++) {
+			if (carta_palpite.equals(r.suspeitos[i])) {
+				jog_atual.checked_suspeitos[i] = true;
+			} else if (carta_palpite.equals(r.armas[i])) {
+				jog_atual.checked_armas[i] = true;
+			} else if (carta_palpite.equals(r.comodos[i])) {
+				jog_atual.checked_comodos[i] = true;
+			}
+
+			for (; i < 9; i++) {
+				if (carta_palpite.equals(r.comodos[i])) {
+					jog_atual.checked_comodos[i] = true;
+				}
+			}
+		}
+	}
+
+	public boolean pode_usar_passagem() {
+		get_jog_atual();
+
+		if (t.tab[jog_atual.getY()][jog_atual.getX()].get_passagem() != null) {
 			return true;
 		}
-		
+
 		return false;
 	}
+
+	public int get_index_jog(String personagem) {
+		return r.get_index_jog(personagem);
+	}
+
 }

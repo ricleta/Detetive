@@ -1,7 +1,6 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import regras.*;
 import gui.*;
@@ -23,6 +22,7 @@ public class Controller {
 		update_estado(2);
 		r = CtrlRegras.getCtrlRegras(n_jogadores, personagens);
 		n_jogadores = num_jogadores;
+		turno = 0;
 
 		j_personagens = new String[n_jogadores];
 		j_estados = new boolean[n_jogadores];
@@ -55,7 +55,7 @@ public class Controller {
 	 * Jogador j faz uma acusação sobre os dados do assassinato. Se a acusação
 	 * estiver correta, j vence o jogo, caso contrário é eliminado
 	 */
-	boolean faz_acusacao(String j_personagem, String suspeito, String arma, String comodo) {
+	public static boolean faz_acusacao(String j_personagem, String suspeito, String arma, String comodo) {
 		if (r.verifica_acusacao(suspeito, arma, comodo)) {
 			// main deve encerrar jogo atual
 			return true;
@@ -69,17 +69,18 @@ public class Controller {
 	 * Jogador j faz um palpite sobre os dados do assassinato e é verificado na mão
 	 * dos demais jogadores se possuem alguma das cartas do palpite
 	 */
-	String faz_palpite(String j_personagem, String suspeito, String arma, String comodo) {
+	public static String faz_palpite(String j_personagem, String suspeito, String arma, String comodo) {
 		String resultado = null;
 		String j_investigado; // jogador cujas cartas serao analisadas
-		int i, k;
+		int i =0, k = 0;
 
-		k = Arrays.binarySearch(j_personagens, j_personagem);
+		k = r.get_index_jog(j_personagem);
 
-		for (i = k; i < j_personagens.length; i++) {
+		for (i = k; i < j_personagens.length; i++) 
+		{
 			j_investigado = j_personagens[i];
 			resultado = r.verifica_palpite(j_investigado, suspeito, arma, comodo);
-
+			
 			if (resultado != null) {
 				return resultado;
 			}
@@ -94,20 +95,15 @@ public class Controller {
 			}
 		}
 
-		// return value temporario, depende da interface
-		return "Palpite nao foi refutado";
+		return null;
 	}
 
-	public static void prox_turno() 
-	{
+	public static void prox_turno() {
 		turno++;
-		
-		if (r.pode_usar_passagem())
-		{
+
+		if (r.pode_usar_passagem()) {
 			tela_jogo.habilita_passagem(true);
-		}
-		else
-		{
+		} else {
 			tela_jogo.habilita_passagem(false);
 		}
 	}
@@ -146,14 +142,11 @@ public class Controller {
 		}
 	}
 
-	public static void atualiza_cell_ocupada(int x, int y) 
-	{
+	public static void atualiza_cell_ocupada(int x, int y) {
 		r.atualiza_cell_ocupada(x, y);
 	}
-	
-	
-	public static void registra(ObservadorIF o)
-	{
+
+	public static void registra(ObservadorIF o) {
 		tela_jogo.add(o);
 	}
 

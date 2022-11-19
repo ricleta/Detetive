@@ -83,17 +83,4 @@ class Notas extends JFrame {
 		}
 
 	}
-
-	// void checks(Boolean checked_suspeitos[], Boolean checked_armas[], Boolean
-	// checked_comodos[]){
-	// for(i = 0; i < 6; i++){
-	// checked_suspeitos[i] = suspeitos[i].isSelected();
-	// checked_armas[i] = armas[i].isSelected();
-	// checked_comodos[i] = comodos[i].isSelected();
-	// }
-
-	// for(i = 6; i < 9; i++){
-	// checked_comodos[i] = comodos[i].isSelected();
-	// }
-	// }
 }

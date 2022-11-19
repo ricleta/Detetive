@@ -9,7 +9,7 @@ public class JogadorTest {
 
 	@Test
 	public void testJogador() {
-		Jogador a = new Jogador(0 , 0, "Coronel Mustard");
+		Jogador a = new Jogador("Coronel Mustard");
 		assertEquals(0, a.getX());
 		assertEquals(0, a.getY());
 		assertEquals("Coronel Mustard", a.getPersonagem());			
@@ -18,31 +18,31 @@ public class JogadorTest {
 	@Test
 	public void testGetX() 
 	{
-		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		Jogador a = new Jogador("Coronel Mustard");
 		assertEquals(1, a.getX());
 	}
 
 	@Test
 	public void testGetY() {
-		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		Jogador a = new Jogador("Coronel Mustard");
 		assertEquals(2, a.getY());
 	}
 
 	@Test
 	public void testGetPersonagem() {
-		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		Jogador a = new Jogador("Coronel Mustard");
 		assertEquals("Coronel Mustard", a.getPersonagem());
 	}
 	
 	@Test
 	public void testGetEliminado() {
-		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		Jogador a = new Jogador("Coronel Mustard");
 		assertEquals(false, a.getEliminado());
 	}
 
 	@Test
 	public void testSetEliminado() {
-		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		Jogador a = new Jogador("Coronel Mustard");
 		
 		a.setEliminado();
 		
@@ -51,7 +51,7 @@ public class JogadorTest {
 	
 	@Test
 	public void testSetX() {
-		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		Jogador a = new Jogador("Coronel Mustard");
 		
 		a.setX(0);
 		
@@ -60,7 +60,7 @@ public class JogadorTest {
 
 	@Test
 	public void testSetY() {
-		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		Jogador a = new Jogador("Coronel Mustard");
 		
 		a.setY(0);
 		
@@ -69,7 +69,7 @@ public class JogadorTest {
 	
 	@Test
 	public void testAddCarta() {
-		Jogador a = new Jogador(1 , 2, "Coronel Mustard");
+		Jogador a = new Jogador("Coronel Mustard");
 		
 		a.add_carta("Faca");
 		

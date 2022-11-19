@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import controller.Controller;
+
 class PalpiteAcusacao extends JFrame implements ActionListener {
 	/**
 	 * 
@@ -19,15 +21,20 @@ class PalpiteAcusacao extends JFrame implements ActionListener {
 	JButton confirmar;
 	private String[] palpite = new String[3];
 	private int cont_selected = 0;
+	private String tipo;
+	TelaJogo telaJogo;
 
 	/* construtor recebe uma String que indica se será Palpite ou Acusação */
-	PalpiteAcusacao(String tipo) {
+	PalpiteAcusacao(String tipo, TelaJogo telaJogo) {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 		this.pack();
 		this.setLayout(new FlowLayout());
 		this.setTitle(tipo);
 		this.setSize(300, 300);
+
+		this.tipo = tipo;
+		this.telaJogo = telaJogo;
 
 		confirmar = new JButton("Confirmar " + tipo);
 		confirmar.setBounds(50, 150, 100, 50);
@@ -80,9 +87,35 @@ class PalpiteAcusacao extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		/* verifica se já foi selecionado um suspeito, uma arma e um cômodo */
 		if (e.getSource() == confirmar && cont_selected == 3) {
+			String jog_atual = Controller.get_jogador_atual();
+
 			System.out.printf("S: %s\nA: %s\nC: %s\n", palpite[0], palpite[1], palpite[2]); // testar se funcionou (sim)
 
-			/////// vai retornar o palpite/acusacao com get_retorno()
+			if (tipo.equals("Palpite")) {
+				String result_palpite = Controller.faz_palpite(jog_atual, palpite[0], palpite[1], palpite[2]);
+
+				if (result_palpite == null) {
+					JOptionPane.showMessageDialog(null, "Seu palpite não foi refutado");
+				} else {
+					JOptionPane.showMessageDialog(null,
+							String.format("Seu palpite foi refutado, a carta %s foi encontrada", result_palpite));
+					telaJogo.set_result_palpite(result_palpite);
+				}
+
+			} else {
+				boolean acerto = Controller.faz_acusacao(jog_atual, palpite[0], palpite[1], palpite[2]);
+
+				if (acerto) {
+					JOptionPane.showMessageDialog(null, String.format("Parabéns %s, você venceu!", jog_atual));
+
+					System.exit(0);
+				} else {
+					JOptionPane.showMessageDialog(null, String.format("%s, você foi eliminado", jog_atual));
+				}
+
+			}
+
+			this.dispose();
 		}
 
 		/*
@@ -110,9 +143,5 @@ class PalpiteAcusacao extends JFrame implements ActionListener {
 			}
 			palpite[2] = (String) comodosBox.getSelectedItem();
 		}
-	}
-
-	public String[] get_retorno() {
-		return palpite;
 	}
 }

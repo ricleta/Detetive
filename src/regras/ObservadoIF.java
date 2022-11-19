@@ -15,4 +15,6 @@ public interface ObservadoIF
 	public void set_coord_possiveis(int [][] coords);
 	
 	public void habilita_passagem(boolean habilitar);
+
+	public String get_result_palpite();
 }

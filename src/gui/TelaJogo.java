@@ -6,8 +6,6 @@ import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.ListIterator;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -58,6 +56,8 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 
 	Integer[] valores_dado = new Integer[] { 1, 2, 3, 4, 5, 6 };
 	JButton movimentar = new JButton("Movimentar");
+
+	private String resultado;
 
 	public TelaJogo() {
 		try {
@@ -166,10 +166,10 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 			Notas bloco = new Notas(notas[0], notas[1], notas[2]);
 		} else if (e.getSource() == palpite) {
 			@SuppressWarnings("unused")
-			PalpiteAcusacao palpite = new PalpiteAcusacao("Palpite");
+			PalpiteAcusacao palpite = new PalpiteAcusacao("Palpite", this);
 		} else if (e.getSource() == acusar) {
 			@SuppressWarnings("unused")
-			PalpiteAcusacao acusacao = new PalpiteAcusacao("Acusacao");
+			PalpiteAcusacao acusacao = new PalpiteAcusacao("Acusacao", this);
 		} else if (e.getSource() == save_game) {
 
 		} else if (e.getSource() == dado) {
@@ -449,5 +449,24 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 		{
 			o.notify_usou_passagem(this);
 		}
+	}
+
+	private void atualiza_notas()
+	{
+		for (ObservadorIF o: observadores) 
+		{
+			o.notify_fez_palpite(this);
+		}
+	}
+	
+	void set_result_palpite(String resultado)
+	{
+		this.resultado = resultado;
+		atualiza_notas();
+	}
+	
+	public String get_result_palpite()
+	{
+		return resultado;
 	}
 }
