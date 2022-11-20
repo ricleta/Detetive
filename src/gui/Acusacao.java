@@ -85,15 +85,19 @@ class Acusacao extends JFrame implements ActionListener {
 		if (e.getSource() == confirmar && cont_selected == 3) {
 			String jog_atual = Controller.get_jogador_atual();
 			
-			System.out.printf("S: %s\nA: %s\nC: %s\n", acusacao[0], acusacao[1], acusacao[2]); // testar se funcionou (sim)
+//			System.out.printf("S: %s\nA: %s\nC: %s\n", acusacao[0], acusacao[1], acusacao[2]); // testar se funcionou (sim)
 			
 			
 			boolean acerto = Controller.faz_acusacao(jog_atual, acusacao[0], acusacao[1], acusacao[2]);
 				
 			if(acerto) {
-				JOptionPane.showMessageDialog(null, String.format("Parabéns %s, você venceu!", jog_atual));
+//				JOptionPane.showMessageDialog(null, String.format("Parabéns %s, você venceu!", jog_atual));
+				
+				telaJogo.dispose();
+				
+				new TelaVitoria(jog_atual);
 					
-				System.exit(0);
+//				System.exit(0);
 			}
 			else {					
 				JOptionPane.showMessageDialog(null, String.format("%s, você foi eliminado", jog_atual));

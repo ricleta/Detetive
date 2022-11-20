@@ -64,6 +64,8 @@ class Regras {
 		envelope[0] = suspeitos[r.nextInt(0, 6)];
 		envelope[1] = armas[r.nextInt(0, 6)];
 		envelope[2] = comodos[r.nextInt(0, 9)];
+		
+		System.out.println("Envelope = " + envelope[0] + " " + envelope[1] + " " + envelope[2]);
 	}
 
 	// usado para testar set_envelope, por envelope ser private

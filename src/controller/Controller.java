@@ -1,7 +1,12 @@
 package controller;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
+
+import javax.swing.JFileChooser;
+
 import regras.*;
 import gui.*;
 
@@ -42,7 +47,22 @@ public class Controller {
 
 		// se jogador pode jogar, retorna nome
 		// se foi eliminado por uma acusao errada, retorna aviso
-		return (!j_estados[id_j_atual]) ? j_personagens[id_j_atual] : "Jogador Eliminado";
+		j_estados = r.getStatusJogadores();
+
+		if (j_estados[id_j_atual]) {
+			for (int i = 1; i < j_estados.length; i++) {
+				int id_prox = (id_j_atual + 1) % n_jogadores;
+
+				if (!j_estados[id_prox]) {
+					return j_personagens[id_prox];
+				}
+
+			}
+
+			System.exit(0);
+		}
+
+		return j_personagens[id_j_atual];
 	}
 
 	/* seleciona um número randômico de 1 a 6 para indicar o valor do dado */
@@ -72,15 +92,14 @@ public class Controller {
 	public static String faz_palpite(String j_personagem, String suspeito, String arma, String comodo) {
 		String resultado = null;
 		String j_investigado; // jogador cujas cartas serao analisadas
-		int i =0, k = 0;
+		int i = 0, k = 0;
 
 		k = r.get_index_jog(j_personagem);
 
-		for (i = k; i < j_personagens.length; i++) 
-		{
+		for (i = k; i < j_personagens.length; i++) {
 			j_investigado = j_personagens[i];
 			resultado = r.verifica_palpite(j_investigado, suspeito, arma, comodo);
-			
+
 			if (resultado != null) {
 				return resultado;
 			}
@@ -125,20 +144,75 @@ public class Controller {
 
 		switch (estado) {
 		case 1:
-			if (tela_perso == null) {
-				tela_perso = new TelaPersonagens();
-			}
+			tela_perso = new TelaPersonagens();
 			break;
 		case 2:
-			if (tela_jogo == null) {
-				tela_jogo = new TelaJogo();
-			}
+			tela_jogo = new TelaJogo();
 			break;
 		default:
-			if (tela_ini == null) {
-				tela_ini = new TelaInicial();
-			}
+			tela_ini = new TelaInicial();
 			break;
+		}
+	}
+
+	public static void salva_jogo() {
+		JFileChooser fileChooser = new JFileChooser();
+		FileWriter filewriter = null;
+		File file;
+		String path;
+		
+		if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			file = fileChooser.getSelectedFile();
+			try {
+				path = file.getPath() + ".txt";
+				file = new File(path);
+				filewriter = new FileWriter(file.getPath());
+				
+				filewriter.write(String.format("%d\n", n_jogadores));
+				
+				for (String s: j_personagens)
+				{
+					filewriter.write(String.format("%s |", s));
+				}
+				
+				filewriter.write(String.format("\n"));
+				
+			} catch (FileNotFoundException e2) {
+				e2.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} finally {
+				try {
+					filewriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void le_jogo_salvo() {
+		JFileChooser fileChooser = new JFileChooser();
+		File file = null;
+		String path, data;
+		Scanner reader = null;
+
+		if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			file = fileChooser.getSelectedFile();
+			try {
+				path = file.getPath();
+				file = new File(path);
+				reader = new Scanner(file);
+
+				while (reader.hasNextLine()) {
+					data = reader.nextLine();
+					System.out.println(data);
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} finally {
+				reader.close();
+			}
 		}
 	}
 
@@ -152,6 +226,7 @@ public class Controller {
 
 	public static void main(String[] args) {
 		tela_ini = new TelaInicial();
+
 	}
 
 }

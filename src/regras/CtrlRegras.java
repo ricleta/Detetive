@@ -163,8 +163,10 @@ public class CtrlRegras implements ObservadorIF {
 	private void get_jog_atual() {
 		String personagem = Controller.get_jogador_atual();
 
-		for (Jogador j : r.jogadores) {
-			if (j.getPersonagem().equals(personagem)) {
+		for (Jogador j : r.jogadores) 
+		{
+			if (j.getPersonagem().equals(personagem)) 
+			{
 				jog_atual = j;
 				break;
 			}
@@ -245,7 +247,8 @@ public class CtrlRegras implements ObservadorIF {
 
 		if (atual.get_estado() == 2) {
 			coord_token = m.entra_comodo(atual.get_comodo(), jog_atual.getPersonagem());
-
+			ob.habilita_palpite(true);
+			
 			jog_atual.setX(coord_token[0]);
 			jog_atual.setY(coord_token[1]);
 
@@ -271,11 +274,21 @@ public class CtrlRegras implements ObservadorIF {
 	}
 
 	@Override
-	public void notify_fez_palpite(ObservadoIF ob) {
+	public void notify_palpite_feito(ObservadoIF ob) 		
+	{
 		atualiza_notas_jog(ob.get_result_palpite());
 	}
+	
+	@Override
+	public void notify_fez_palpite(ObservadoIF ob) 
+	{
+		get_jog_atual();
+		ob.muda_comodo_atual(t.tab[jog_atual.getY()][jog_atual.getX()].get_comodo());
+		ob.habilita_palpite(false);
+	}
 
-	private void atualiza_notas_jog(String carta_palpite) {
+	private void atualiza_notas_jog(String carta_palpite) 
+	{
 		int i;
 
 		/* iterar pela lista até achar o jogador atual para poder retornar suas notas */

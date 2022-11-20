@@ -46,6 +46,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 	ArrayList <ObservadorIF> observadores = new ArrayList <ObservadorIF>();
 
 	String jog_atual = "Srta. Scarlet";
+	String comodo_atual;
 	int[][] coord_possiveis;
 	int[] dados;
 	int id_jog;
@@ -104,6 +105,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 		this.add(palpite);
 		palpite.setBounds(1020, 300, 150, 50);
 		palpite.addActionListener(this);
+		palpite.setEnabled(false);
 
 		this.add(acusar);
 		acusar.setBounds(1020, 350, 150, 50);
@@ -112,7 +114,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 		this.add(save_game);
 		save_game.setBounds(1020, 450, 150, 50);
 		save_game.addActionListener(this);
-		save_game.setEnabled(false); // so fica enabled no fim da jogada
+		save_game.setEnabled(true); // so fica enabled no fim da jogada
 
 		this.add(dado);
 		dado.setBounds(1020, 600, 150, 50);
@@ -158,6 +160,7 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 		} else if (e.getSource() == show_cards) {
 			ArrayList<String> player_cards = Controller.get_cartas_jog_atual();
 
+			@SuppressWarnings("unused")
 			CartasMostradas myCards = new CartasMostradas(player_cards);
 		} else if (e.getSource() == notepad) {
 			boolean[][] notas = Controller.get_notas_jog_atual();
@@ -165,12 +168,15 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 			@SuppressWarnings("unused")
 			Notas bloco = new Notas(notas[0], notas[1], notas[2]);
 		} else if (e.getSource() == palpite) {
+			atualiza_palpite();
+			
 			@SuppressWarnings("unused")
-			PalpiteAcusacao palpite = new PalpiteAcusacao("Palpite", this);
+			Palpite palpite = new Palpite(this, comodo_atual);
 		} else if (e.getSource() == acusar) {
 			@SuppressWarnings("unused")
-			PalpiteAcusacao acusacao = new PalpiteAcusacao("Acusacao", this);
+			Acusacao acusacao = new Acusacao(this);
 		} else if (e.getSource() == save_game) {
+			Controller.salva_jogo();
 
 		} else if (e.getSource() == dado) {
 			dados = Controller.roll_dice();
@@ -283,8 +289,14 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 			atualiza_movimento();
 		}
 	}
+	
+	public void muda_comodo_atual(String comodo)
+	{
+		comodo_atual = comodo;
+	}
 
-	int get_id_jog() {
+	int get_id_jog() 
+	{
 		switch (jog_atual) {
 		case "Srta. Scarlet":
 			return 0;
@@ -304,17 +316,10 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 	}
 
 	/* Falsa implementação necessária devido à interface MouseListener */
-	public void mousePressed(java.awt.event.MouseEvent e) {
-	}
-
-	public void mouseReleased(java.awt.event.MouseEvent e) {
-	}
-
-	public void mouseEntered(java.awt.event.MouseEvent e) {
-	}
-
-	public void mouseExited(java.awt.event.MouseEvent e) {
-	}
+	public void mousePressed(java.awt.event.MouseEvent e) {}
+	public void mouseReleased(java.awt.event.MouseEvent e) {}
+	public void mouseEntered(java.awt.event.MouseEvent e) {}
+	public void mouseExited(java.awt.event.MouseEvent e) {}
 
 	void ini_coord_jogadores() {
 		coord_multiplier[0] = new int[] { 7, 24 }; // ini scarlet
@@ -427,6 +432,12 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 		passagemSecreta.setEnabled(habilitar);
 	}
 	
+	@Override
+	public void habilita_palpite(boolean habilitar)
+	{
+		palpite.setEnabled(habilitar);
+	}
+	
 	private void atualiza_dado()
 	{	
 		for (ObservadorIF o: observadores) 
@@ -452,6 +463,14 @@ public class TelaJogo extends JFrame implements ActionListener, MouseListener, O
 	}
 
 	private void atualiza_notas()
+	{
+		for (ObservadorIF o: observadores) 
+		{
+			o.notify_palpite_feito(this);
+		}
+	}
+	
+	private void atualiza_palpite()
 	{
 		for (ObservadorIF o: observadores) 
 		{

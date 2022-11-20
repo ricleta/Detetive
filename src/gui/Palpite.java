@@ -70,7 +70,7 @@ class Palpite extends JFrame implements ActionListener {
 		if (e.getSource() == confirmar && cont_selected == 2) {
 			String jog_atual = Controller.get_jogador_atual();
 			
-			System.out.printf("S: %s\nA: %s\nC: %s\n", palpite[0], palpite[1], comodo); // testar se funcionou (sim)
+//			System.out.printf("S: %s\nA: %s\nC: %s\n", palpite[0], palpite[1], comodo); // testar se funcionou (sim)
 			
 			String result_palpite = Controller.faz_palpite(jog_atual, palpite[0], palpite[1], comodo);
 				
@@ -81,8 +81,7 @@ class Palpite extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, String.format("Seu palpite foi refutado, a carta %s foi encontrada", result_palpite));
 				telaJogo.set_result_palpite(result_palpite);
 			}
-								
-
+							
 			this.dispose();
 		}
 

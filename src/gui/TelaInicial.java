@@ -41,24 +41,23 @@ public class TelaInicial extends JFrame implements ActionListener {
 		this.add(criarJogo);
 		criarJogo.addActionListener(this);
 		criarJogo.setBounds(100, 300, 150, 100);
-		
+
 		this.add(continuarJogo);
 		continuarJogo.addActionListener(this);
 		continuarJogo.setBounds(300, 300, 150, 100);
-		
+
 		this.setVisible(true);
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == criarJogo) 
-		{
+		if (e.getSource() == criarJogo) {
 			Controller.update_estado(1);
 			this.dispose();
+		} else if (e.getSource() == continuarJogo) {
+//			System.out.println("Vai para jogo salvo");
+			Controller.le_jogo_salvo();
+			this.dispose();
 		}
-//    else if(e.getSource() == continuarJogo)
-//    {	
-//      System.out.println("Vai para jogo salvo");
-//    }
 	}
 
 	public void paint(Graphics g) {
@@ -67,7 +66,7 @@ public class TelaInicial extends JFrame implements ActionListener {
 		Graphics2D g2d = (Graphics2D) g;
 
 		g2d.drawImage(img_ini, 0, 20, 1200, 680, this);
-		
+
 		criarJogo.repaint();
 		continuarJogo.repaint();
 	}

@@ -1,11 +1,16 @@
 package gui;
 
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import controller.Controller;
 
 public class TelaVitoria extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	JLabel label;
 	JButton novoJogo = new JButton("Novo jogo");
 	JButton sair = new JButton("Sair");
@@ -36,7 +41,7 @@ public class TelaVitoria extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == novoJogo) {
-			new TelaPersonagens();
+			Controller.update_estado(1);
 			
 			this.dispose();
 		}

@@ -8,5 +8,7 @@ public interface ObservadorIF
 	
 	public void notify_usou_passagem(ObservadoIF ob);
 
+	public void notify_palpite_feito(ObservadoIF ob);
+
 	public void notify_fez_palpite(ObservadoIF ob);
 }
